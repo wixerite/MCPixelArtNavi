@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.Common", "MCPArtNavi.Common\MCPArtNavi.Common.csproj", "{164316CB-B20D-4CE0-94A7-FDB51DF63D68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.UserApp", "MCPArtNavi.UserApp\MCPArtNavi.UserApp.csproj", "{6702E706-BFF3-49D5-99BB-CD8DAE002FEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{164316CB-B20D-4CE0-94A7-FDB51DF63D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{164316CB-B20D-4CE0-94A7-FDB51DF63D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{164316CB-B20D-4CE0-94A7-FDB51DF63D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{164316CB-B20D-4CE0-94A7-FDB51DF63D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6702E706-BFF3-49D5-99BB-CD8DAE002FEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6702E706-BFF3-49D5-99BB-CD8DAE002FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6702E706-BFF3-49D5-99BB-CD8DAE002FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6702E706-BFF3-49D5-99BB-CD8DAE002FEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D2ED17FC-AE45-484D-99CD-22067F259238}
+	EndGlobalSection
+EndGlobal
