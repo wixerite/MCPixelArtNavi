@@ -34,7 +34,6 @@
         </Menu>
         <ScrollViewer DockPanel.Dock="Bottom" Height="Auto">
             <Canvas>
-                <local:PixelCanvas DataContext="{Binding PixelCanvasDataContext, Mode=OneWayToSource}"/>
             </Canvas>
         </ScrollViewer>
     </DockPanel>
