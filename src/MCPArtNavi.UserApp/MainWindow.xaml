@@ -6,17 +6,22 @@
         xmlns:local="clr-namespace:MCPArtNavi.UserApp"
         xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
         mc:Ignorable="d"
-        Title="MCPixel Art Navi" Height="450" Width="800">
+        Title="MCPixel Art Navi" Height="450" Width="800" MinWidth="200" MinHeight="50">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File}">
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_NewFile}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_OpenFile}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}"/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}"/>
                 <Separator/>
@@ -31,10 +36,20 @@
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help_About}"/>
             </MenuItem>
+            <MenuItem Header="Debug(_D)">
+                <MenuItem Header="Load example image(_X)" Command="{Binding LoadExampleImageCommand}"/>
+            </MenuItem>
         </Menu>
-        <ScrollViewer DockPanel.Dock="Bottom" Height="Auto">
-            <Canvas>
-            </Canvas>
+        <ScrollViewer Grid.Row="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}">
+            <local:PixelCanvas UpdateMode="{Binding CanvasUpdateMode}" Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30">
+                <local:PixelCanvas.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ScaleY="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                </local:PixelCanvas.LayoutTransform>
+            </local:PixelCanvas>
         </ScrollViewer>
-    </DockPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock>Zoom　</TextBlock>
+            <Slider Width="150" Minimum="1" Maximum="30" Value="{Binding CanvasZoom}"/>
+        </StackPanel>
+    </Grid>
 </Window>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,24 +7,54 @@ using System.Windows.Media;
 
 using Prism.Mvvm;
 
+using MCPArtNavi.Common;
+using MCPArtNavi.Common.Items;
+using MCPArtNavi.UserApp.PixelCanvasInternal;
+
 namespace MCPArtNavi.UserApp
 {
     public class PixelCanvasViewModel : BindableBase
     {
         // 非公開フィールド
-        
-
-        // 公開プロパティ
+        private Palette _palette;
 
 
         // バインディング プロパティ
 
-        private ObservableCollection<ObservableCollection<Brush>> _pixelMap;
-
-        public ObservableCollection<ObservableCollection<Brush>> PixelMap
+        private int _pixelArtWidth;
+        public int PixelArtWidth
         {
-            get => this._pixelMap;
-            set => this.SetProperty(ref this._pixelMap, value);
+            get => this._pixelArtWidth;
+            set => this.SetProperty(ref this._pixelArtWidth, value);
+        }
+
+        private int _pixelArtHeight;
+        public int PixelArtHeight
+        {
+            get => this._pixelArtHeight;
+            set => this.SetProperty(ref this._pixelArtHeight, value);
+        }
+
+        /// <summary>
+        /// バインディング プロパティです。<see cref="PixelCanvasUpdateMode"/> を使用し、他のパラメータの変更をリアルタイムでマップにキャンバスに反映するかどうかを制御する値を取得または設定します。バインディング目的以外での外部からの利用禁止。
+        /// </summary>
+
+        private PixelCanvasUpdateMode _canvasUpdateMode;
+        public PixelCanvasUpdateMode CanvasUpdateMode
+        {
+            get => this._canvasUpdateMode;
+            set => this.SetProperty(ref this._canvasUpdateMode, value);
+        }
+
+        private PixelCanvasMapHandler _mapHandler;
+
+        /// <summary>
+        /// バインディング プロパティです。<see cref="PixelCanvasMapHandler"/> を取得または設定します。バインディング目的以外での外部からの利用禁止。
+        /// </summary>
+        public PixelCanvasMapHandler MapHandler
+        {
+            get => this._mapHandler;
+            set => this.SetProperty(ref this._mapHandler, value);
         }
 
 
@@ -33,26 +62,72 @@ namespace MCPArtNavi.UserApp
 
         public PixelCanvasViewModel()
         {
-            this.PixelMap = new ObservableCollection<ObservableCollection<Brush>>();
-            this.PixelMap.Add(new ObservableCollection<Brush>());
-            this.PixelMap[0].Add(new SolidColorBrush(Colors.Red));
+            this.CanvasUpdateMode = PixelCanvasUpdateMode.Freezed;
+            this.PixelArtWidth = 128;
+            this.PixelArtHeight = 128;
+            this.CanvasUpdateMode = PixelCanvasUpdateMode.Enabled;
+
+            this.MapHandler = new PixelCanvasMapHandler();
+
+            this._palette = new Palette();
         }
 
 
         // 公開メソッド
 
-        public void SetPixelMap(Brush[] palette, int[][] map)
+        public void LoadPixelArt(PixelArtDocument document)
         {
-            this.PixelMap = new ObservableCollection<ObservableCollection<Brush>>();
-            if (map.GetLength(0) != 512 || map.GetLength(1) != 512)
-                throw new InvalidOperationException();
+            this.CanvasUpdateMode = PixelCanvasUpdateMode.Freezed;
+            this.PixelArtWidth = document.Size.GetWidth();
+            this.PixelArtHeight = document.Size.GetHeight();
+            this.CanvasUpdateMode = PixelCanvasUpdateMode.Enabled;
 
-            for (var i = 0; i < 512; i++)
+            var p = 0;
+            for (var i = 0; i < this.PixelArtHeight; i++)
             {
-                this.PixelMap.Add(new ObservableCollection<Brush>());
-                for (var j = 0; j < 512; j++)
-                    this.PixelMap[i][j] = palette[map[i][j]];
+                for (var j = 0; j < this.PixelArtWidth; j++, p++)
+                {
+                    var item = document.Pixels[p];
+                    if (this._palette.ContainsMCItem(item) == false)
+                        this._palette.Items.Add(PaletteItem.CreateFrom(item));
+
+                    this.MapHandler.SetPixel(j, i, this._palette.GetByMCItem(item).Brush);
+                }
             }
+        }
+
+        public PixelArtDocument GetPixelArt()
+        {
+            var artSize = default(PixelArtSize);
+            foreach (var s in Enum.GetValues(typeof(PixelArtSize)).Cast<PixelArtSize>())
+            {
+                if (s.GetWidth() != this.PixelArtWidth && s.GetHeight() != this.PixelArtHeight)
+                    continue;
+
+                artSize = s;
+                break;
+            }
+
+            var colorTable = new Dictionary<Color, IMCItem>();
+            foreach (var item in MCItemUtils.EnabledItems)
+                colorTable[(Color)ColorConverter.ConvertFromString(item.ItemColor)] = item;
+
+            var pixels = new IMCItem[this.PixelArtWidth * this.PixelArtHeight];
+            var p = 0;
+            for (var i = 0; i < this.PixelArtHeight; i++)
+            {
+                for (var j = 0; j < this.PixelArtWidth; j++, p++)
+                {
+                    pixels[p] = this._palette.GetByBrush(this.MapHandler.GetPixel(j, i)).MCItem;
+                }
+            }
+
+            var document = new PixelArtDocument();
+            document.DocumentTitle = "Untitled Map";
+            document.Size = artSize;
+            document.Pixels = pixels;
+            
+            return document;
         }
     }
 }

@@ -7,12 +7,12 @@ using System.Windows;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("MC Pixel Art Navi")]
-[assembly: AssemblyDescription("MC Pixel Art Navi User Application")]
+[assembly: AssemblyTitle("wpf-test")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Explorers of the Binary World / a32kita")]
-[assembly: AssemblyProduct("MC Pixel Art Navi")]
-[assembly: AssemblyCopyright("Copyright © 2021 Explorers of the Binary World / a32kita All Rights Reserved.")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("wpf-test")]
+[assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
