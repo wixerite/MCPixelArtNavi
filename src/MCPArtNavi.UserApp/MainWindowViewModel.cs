@@ -66,6 +66,11 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._saveAs_command);
         }
 
+        public DelegateCommand OpenCommand
+        {
+            get => new DelegateCommand(this._open_command);
+        }
+
         public DelegateCommand LoadExampleImageCommand
         {
             get => new DelegateCommand(this._debug_loadExampleArt);
@@ -85,6 +90,30 @@ namespace MCPArtNavi.UserApp
 
 
         // 非公開メソッド
+
+        private void _open_command()
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Filter = "MC Pixel Art Navi Document (*.mcpxart)|*.mcpxart|All Files (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                PixelArtDocument doc = null;
+                using (var fs = File.OpenRead(openFileDialog.FileName))
+                {
+                    doc = PixelArtFile.LoadFrom(fs);
+                }
+
+                this.CanvasVisility = Visibility.Hidden;
+                this.LoadingTextVisility = Visibility.Visible;
+                this.CanvasViewModel.LoadPixelArt(doc);
+                this.CanvasVisility = Visibility.Visible;
+                this.LoadingTextVisility = Visibility.Collapsed;
+            }
+        }
 
         private void _saveAs_command()
         {

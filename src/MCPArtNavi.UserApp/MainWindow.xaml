@@ -19,7 +19,7 @@
         <Menu Grid.Row="0">
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File}">
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_NewFile}"/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_OpenFile}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_OpenFile}" Command="{Binding OpenCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
                 <Separator/>

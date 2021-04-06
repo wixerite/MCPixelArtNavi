@@ -31,14 +31,15 @@ namespace MCPArtNavi.Common.PxartFileUtils
             {
                 var metaSec = new PropSection("mcpixart-file-meta");
                 metaSec.Items.Add(new PropItem("magic-number", PropType.String, "  MCPIXART  "));
+                metaSec.Items.Add(new PropItem("file-description", PropType.String, " This is MC Pixel Art Navi Document File. Please visit our web site: https://www.a32kita.net/ "));
                 metaSec.Items.Add(new PropItem("file-version", PropType.Int64, 1L));
                 metaSec.Items.Add(new PropItem("created-at", PropType.DateTime, DateTime.Now));
 
                 var docSec = new PropSection("mcpixart-file-doc");
-                metaSec.Items.Add(new PropItem("document-title", PropType.String, document.DocumentTitle));
-                metaSec.Items.Add(new PropItem("art-size", PropType.Int16, (short)document.Size));
-                metaSec.Items.Add(new PropItem("art-palette", PropType.StringArray, itemPalette.Select(item => item.ItemId).ToArray()));
-                metaSec.Items.Add(new PropItem("art-pixels", PropType.Int32Array, pixelValues));
+                docSec.Items.Add(new PropItem("document-title", PropType.String, document.DocumentTitle));
+                docSec.Items.Add(new PropItem("art-size", PropType.Int16, (short)document.Size));
+                docSec.Items.Add(new PropItem("art-palette", PropType.StringArray, itemPalette.Select(item => item.ItemId).ToArray()));
+                docSec.Items.Add(new PropItem("art-pixels", PropType.Int32Array, pixelValues));
 
                 propWriter.Write(new Props(new PropSection[] { metaSec, docSec }));
             }
