@@ -40,13 +40,18 @@
                 <MenuItem Header="Load example image(_X)" Command="{Binding LoadExampleImageCommand}"/>
             </MenuItem>
         </Menu>
-        <ScrollViewer Grid.Row="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}">
-            <local:PixelCanvas UpdateMode="{Binding CanvasUpdateMode}" Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30">
+        <ScrollViewer Grid.Row="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}" Visibility="{Binding DataContext.CanvasVisility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+            <local:PixelCanvas Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30">
                 <local:PixelCanvas.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ScaleY="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                 </local:PixelCanvas.LayoutTransform>
             </local:PixelCanvas>
         </ScrollViewer>
+        <Grid Grid.Row="1">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White" Visibility="{Binding LoadingTextVisility}">
+                Loading ...
+            </TextBlock>
+        </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock>Zoom　</TextBlock>
             <Slider Width="150" Minimum="1" Maximum="30" Value="{Binding CanvasZoom}"/>

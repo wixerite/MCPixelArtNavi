@@ -12,6 +12,7 @@ namespace MCPArtNavi.UserApp
         // 非公開フィールド
         private EventHandler<PixelEventArgs> _getPixelRequested;
         private EventHandler<PixelEventArgs> _setPixelRequested;
+        private EventHandler _redrawPixelsRequested;
 
 
         // 公開イベント
@@ -26,6 +27,12 @@ namespace MCPArtNavi.UserApp
         {
             add => this._setPixelRequested += value;
             remove => this._setPixelRequested -= value;
+        }
+
+        public event EventHandler RedrawPixelsRequested
+        {
+            add => this._redrawPixelsRequested += value;
+            remove => this._redrawPixelsRequested -= value;
         }
 
 
@@ -65,6 +72,11 @@ namespace MCPArtNavi.UserApp
             }
 
             return true;
+        }
+
+        public void RedrawPixels()
+        {
+            this._redrawPixelsRequested?.Invoke(this, new EventArgs());
         }
 
         

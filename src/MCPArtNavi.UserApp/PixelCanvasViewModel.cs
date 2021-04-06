@@ -35,17 +35,6 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._pixelArtHeight, value);
         }
 
-        /// <summary>
-        /// バインディング プロパティです。<see cref="PixelCanvasUpdateMode"/> を使用し、他のパラメータの変更をリアルタイムでマップにキャンバスに反映するかどうかを制御する値を取得または設定します。バインディング目的以外での外部からの利用禁止。
-        /// </summary>
-
-        private PixelCanvasUpdateMode _canvasUpdateMode;
-        public PixelCanvasUpdateMode CanvasUpdateMode
-        {
-            get => this._canvasUpdateMode;
-            set => this.SetProperty(ref this._canvasUpdateMode, value);
-        }
-
         private PixelCanvasMapHandler _mapHandler;
 
         /// <summary>
@@ -62,10 +51,8 @@ namespace MCPArtNavi.UserApp
 
         public PixelCanvasViewModel()
         {
-            this.CanvasUpdateMode = PixelCanvasUpdateMode.Freezed;
             this.PixelArtWidth = 128;
             this.PixelArtHeight = 128;
-            this.CanvasUpdateMode = PixelCanvasUpdateMode.Enabled;
 
             this.MapHandler = new PixelCanvasMapHandler();
 
@@ -77,10 +64,8 @@ namespace MCPArtNavi.UserApp
 
         public void LoadPixelArt(PixelArtDocument document)
         {
-            this.CanvasUpdateMode = PixelCanvasUpdateMode.Freezed;
             this.PixelArtWidth = document.Size.GetWidth();
             this.PixelArtHeight = document.Size.GetHeight();
-            this.CanvasUpdateMode = PixelCanvasUpdateMode.Enabled;
 
             var p = 0;
             for (var i = 0; i < this.PixelArtHeight; i++)
@@ -94,6 +79,8 @@ namespace MCPArtNavi.UserApp
                     this.MapHandler.SetPixel(j, i, this._palette.GetByMCItem(item).Brush);
                 }
             }
+
+            this.MapHandler.RedrawPixels();
         }
 
         public PixelArtDocument GetPixelArt()

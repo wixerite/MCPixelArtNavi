@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Microsoft.Win32;
 
@@ -31,6 +32,22 @@ namespace MCPArtNavi.UserApp
         {
             get => this._canvasViewModel;
             set => this.SetProperty(ref this._canvasViewModel, value);
+        }
+
+        private Visibility _canvasVisility;
+
+        public Visibility CanvasVisility
+        {
+            get => this._canvasVisility;
+            set => this.SetProperty(ref this._canvasVisility, value);
+        }
+
+        private Visibility _loadingTextVisility;
+
+        public Visibility LoadingTextVisility
+        {
+            get => this._loadingTextVisility;
+            set => this.SetProperty(ref this._loadingTextVisility, value);
         }
 
         private double _canvasZoom;
@@ -61,6 +78,9 @@ namespace MCPArtNavi.UserApp
         {
             this.CanvasViewModel = new PixelCanvasViewModel();
             this.CanvasZoom = 4.0d;
+
+            this.CanvasVisility = Visibility.Visible;
+            this.LoadingTextVisility = Visibility.Collapsed;
         }
 
 
@@ -88,6 +108,9 @@ namespace MCPArtNavi.UserApp
         private void _debug_loadExampleArt()
         {
             // Example
+            this.CanvasVisility = Visibility.Hidden;
+            this.LoadingTextVisility = Visibility.Visible;
+
             var white_wool = new Common.Items.MCWhiteWool();
             var black_wool = new Common.Items.MCBlackWool();
 
@@ -103,6 +126,9 @@ namespace MCPArtNavi.UserApp
             }
 
             this.CanvasViewModel.LoadPixelArt(pxartDoc);
+
+            this.CanvasVisility = Visibility.Visible;
+            this.LoadingTextVisility = Visibility.Collapsed;
         }
     }
 }
