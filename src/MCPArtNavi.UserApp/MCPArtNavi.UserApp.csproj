@@ -85,6 +85,7 @@
   <ItemGroup>
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="PixelCanvas.cs" />
+    <Compile Include="PixelCanvasInternal\HandleableElement.cs" />
     <Compile Include="PixelCanvasInternal\Palette.cs" />
     <Compile Include="PixelCanvasInternal\PaletteItem.cs" />
     <Compile Include="PixelCanvasInternal\RenderRectangle.cs" />

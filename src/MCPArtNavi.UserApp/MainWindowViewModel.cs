@@ -13,6 +13,7 @@ using Prism.Mvvm;
 
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.PxartFileUtils;
+using System.ComponentModel;
 
 namespace MCPArtNavi.UserApp
 {
@@ -34,20 +35,20 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._canvasViewModel, value);
         }
 
-        private Visibility _canvasVisility;
+        private Visibility _canvasVisibility;
 
-        public Visibility CanvasVisility
+        public Visibility CanvasVisibility
         {
-            get => this._canvasVisility;
-            set => this.SetProperty(ref this._canvasVisility, value);
+            get => this._canvasVisibility;
+            set => this.SetProperty(ref this._canvasVisibility, value);
         }
 
-        private Visibility _loadingTextVisility;
+        private Visibility _loadingTextVisibility;
 
-        public Visibility LoadingTextVisility
+        public Visibility LoadingTextVisibility
         {
-            get => this._loadingTextVisility;
-            set => this.SetProperty(ref this._loadingTextVisility, value);
+            get => this._loadingTextVisibility;
+            set => this.SetProperty(ref this._loadingTextVisibility, value);
         }
 
         private double _canvasZoom;
@@ -56,6 +57,22 @@ namespace MCPArtNavi.UserApp
         {
             get => this._canvasZoom;
             set => this.SetProperty(ref this._canvasZoom, value);
+        }
+
+        private bool _showChunkLinesChecked;
+
+        public bool ShowChunkLinesChecked
+        {
+            get => this._showChunkLinesChecked;
+            set => this.SetProperty(ref this._showChunkLinesChecked, value);
+        }
+
+        private Visibility _chunkLinesVisibility;
+
+        public Visibility ChunkLinesVisibility
+        {
+            get => this._chunkLinesVisibility;
+            set => this.SetProperty(ref this._chunkLinesVisibility, value);
         }
 
 
@@ -84,8 +101,28 @@ namespace MCPArtNavi.UserApp
             this.CanvasViewModel = new PixelCanvasViewModel();
             this.CanvasZoom = 4.0d;
 
-            this.CanvasVisility = Visibility.Visible;
-            this.LoadingTextVisility = Visibility.Collapsed;
+            this.CanvasVisibility = Visibility.Visible;
+            this.LoadingTextVisibility = Visibility.Collapsed;
+            this.ShowChunkLinesChecked = true;
+        }
+
+
+        // 限定公開メソッド
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            // 基底呼び出し
+            base.OnPropertyChanged(args);
+
+            switch (args.PropertyName)
+            {
+                case nameof(ShowChunkLinesChecked):
+                    if (this.ShowChunkLinesChecked)
+                        this.ChunkLinesVisibility = Visibility.Visible;
+                    else
+                        this.ChunkLinesVisibility = Visibility.Hidden;
+                    break;
+            }
         }
 
 
@@ -107,11 +144,11 @@ namespace MCPArtNavi.UserApp
                     doc = PixelArtFile.LoadFrom(fs);
                 }
 
-                this.CanvasVisility = Visibility.Hidden;
-                this.LoadingTextVisility = Visibility.Visible;
+                this.CanvasVisibility = Visibility.Hidden;
+                this.LoadingTextVisibility = Visibility.Visible;
                 this.CanvasViewModel.LoadPixelArt(doc);
-                this.CanvasVisility = Visibility.Visible;
-                this.LoadingTextVisility = Visibility.Collapsed;
+                this.CanvasVisibility = Visibility.Visible;
+                this.LoadingTextVisibility = Visibility.Collapsed;
             }
         }
 
@@ -137,8 +174,8 @@ namespace MCPArtNavi.UserApp
         private void _debug_loadExampleArt()
         {
             // Example
-            this.CanvasVisility = Visibility.Hidden;
-            this.LoadingTextVisility = Visibility.Visible;
+            this.CanvasVisibility = Visibility.Hidden;
+            this.LoadingTextVisibility = Visibility.Visible;
 
             var white_wool = new Common.Items.MCWhiteWool();
             var black_wool = new Common.Items.MCBlackWool();
@@ -156,8 +193,8 @@ namespace MCPArtNavi.UserApp
 
             this.CanvasViewModel.LoadPixelArt(pxartDoc);
 
-            this.CanvasVisility = Visibility.Visible;
-            this.LoadingTextVisility = Visibility.Collapsed;
+            this.CanvasVisibility = Visibility.Visible;
+            this.LoadingTextVisibility = Visibility.Collapsed;
         }
     }
 }

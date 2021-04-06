@@ -18,17 +18,15 @@ namespace MCPArtNavi.UserApp
     public class PixelCanvas : UserControl
     {
         // 非公開フィールド
+        private Grid _rootLayer;
+        private HandleableElement _pixelMapLayer;
+        private HandleableElement _chunkLinesLayer;
 
-        //private FastCanvas _mainCanvas;
-        //private Canvas _mainCanvas;
-        //private Canvas _dummyCanvas;
         private RenderRectangle[][] _pixRectangels;
         private RenderRectangle[] _chunksVerticalLines;
         private RenderRectangle[] _chunksHorizontalLines;
         private SolidColorBrush _defaultColorBrush;
         private SolidColorBrush _defaultChunkLineColorBrush;
-
-        private DrawingGroup _backingStore;
 
 
         // 依存関係プロパティ
@@ -70,7 +68,7 @@ namespace MCPArtNavi.UserApp
                     var oldHandler = (PixelCanvasMapHandler)e.OldValue;
                     oldHandler.GetPixelRequested -= _this._mapHandler_getPixelRequested;
                     oldHandler.SetPixelRequested -= _this._mapHandler_setPixelRequested;
-                    oldHandler.RedrawPixelsRequested -= _this._mapHandler_redrawPixelsRequested;
+                    oldHandler.RedrawLayoutRequested -= _this._mapHandler_redrawPixelsRequested;
                 }
 
                 if (e.NewValue as PixelCanvasMapHandler != null)
@@ -78,21 +76,52 @@ namespace MCPArtNavi.UserApp
                     var newHandler = (PixelCanvasMapHandler)e.NewValue;
                     newHandler.GetPixelRequested += _this._mapHandler_getPixelRequested;
                     newHandler.SetPixelRequested += _this._mapHandler_setPixelRequested;
-                    newHandler.RedrawPixelsRequested += _this._mapHandler_redrawPixelsRequested;
+                    newHandler.RedrawLayoutRequested += _this._mapHandler_redrawPixelsRequested;
                 }
             })));
+
+
+
+
+        public Visibility ChunkLinesLayerVisibility
+        {
+            get { return (Visibility)GetValue(ChunkLinesLayerVisibilityProperty); }
+            set { SetValue(ChunkLinesLayerVisibilityProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ChunkLinesLayerVisibility.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ChunkLinesLayerVisibilityProperty =
+            DependencyProperty.Register("ChunkLinesLayerVisibility", typeof(Visibility), typeof(PixelCanvas), new PropertyMetadata(Visibility.Visible, new PropertyChangedCallback((sender, e) =>
+            {
+                var _this = (PixelCanvas)sender;
+                _this._chunkLinesLayer.Visibility = (Visibility)e.NewValue;
+            })));
+
+
+
 
 
         // コンストラクタ
 
         public PixelCanvas()
         {
-            this._backingStore = new DrawingGroup();
+            this._rootLayer = new Grid();
+            this.Content = this._rootLayer;
+
+            this._chunkLinesLayer = new HandleableElement();
+            this._chunkLinesLayer.Rendering += _chunkLinesLayer_Rendering;
+
+            this._pixelMapLayer = new HandleableElement();
+            this._pixelMapLayer.Rendering += _pixelMapLayer_Rendering;
+
+            this._rootLayer.Children.Add(this._pixelMapLayer);
+            this._rootLayer.Children.Add(this._chunkLinesLayer);
 
             this._defaultColorBrush = new SolidColorBrush(Colors.Silver);
             this._defaultChunkLineColorBrush = new SolidColorBrush(Colors.Blue);
             this._canvasLayoutUpdating();
         }
+
 
 
 
@@ -106,27 +135,27 @@ namespace MCPArtNavi.UserApp
             // 描画
 
             // オブジェクト描画 :: ピクセル
-            for (var i = 0; i < this.PixelWidth; i++)
-            {
-                for (var j = 0; j < this.PixelHeight; j++)
-                {
-                    var rr = this._pixRectangels[i][j];
-                    drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-                }
-            }
+            //for (var i = 0; i < this.PixelWidth; i++)
+            //{
+            //    for (var j = 0; j < this.PixelHeight; j++)
+            //    {
+            //        var rr = this._pixRectangels[i][j];
+            //        drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+            //    }
+            //}
 
             // オブジェクト描画 :: チャンク線
-            for (var i = 0; i < this._chunksVerticalLines.Length; i++)
-            {
-                var rr = this._chunksVerticalLines[i];
-                drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-            }
+            //for (var i = 0; i < this._chunksVerticalLines.Length; i++)
+            //{
+            //    var rr = this._chunksVerticalLines[i];
+            //    drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+            //}
 
-            for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
-            {
-                var rr = this._chunksHorizontalLines[i];
-                drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-            }
+            //for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
+            //{
+            //    var rr = this._chunksHorizontalLines[i];
+            //    drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+            //}
         }
 
 
@@ -144,9 +173,10 @@ namespace MCPArtNavi.UserApp
         /// <summary>
         /// 描画を行います。
         /// </summary>
-        private void _redrawPixels()
+        private void _redrawLayout()
         {
-            this.InvalidateVisual();
+            this._pixelMapLayer.InvalidateVisual();
+            this._chunkLinesLayer.InvalidateVisual();
         }
 
         private void _initalizeRectangles()
@@ -160,7 +190,7 @@ namespace MCPArtNavi.UserApp
                 {
                     this._pixRectangels[i][j] = new RenderRectangle();
                     this._pixRectangels[i][j].Brush = this._defaultColorBrush;
-                    this._pixRectangels[i][j].Rect = new Rect(j + 0.2, i + 0.2, 0.8d, 0.8d);
+                    this._pixRectangels[i][j].Rect = new Rect(j + 0.07, i + 0.07, 0.93d, 0.93d);
                 }
             }
         }
@@ -213,7 +243,36 @@ namespace MCPArtNavi.UserApp
 
         private void _mapHandler_redrawPixelsRequested(Object sender, EventArgs e)
         {
-            this._redrawPixels();
+            this._redrawLayout();
+        }
+
+
+        // 非公開メソッド :: 子レイヤー描画
+
+        private void _chunkLinesLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
+        {
+            for (var i = 0; i < this._chunksVerticalLines.Length; i++)
+            {
+                var rr = this._chunksVerticalLines[i];
+                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+            }
+
+            for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
+            {
+                var rr = this._chunksHorizontalLines[i];
+                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+            }
+        }
+        private void _pixelMapLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
+        {
+            for (var i = 0; i < this.PixelWidth; i++)
+            {
+                for (var j = 0; j < this.PixelHeight; j++)
+                {
+                    var rr = this._pixRectangels[i][j];
+                    e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                }
+            }
         }
     }
 }

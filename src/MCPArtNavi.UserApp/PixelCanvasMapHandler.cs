@@ -29,7 +29,7 @@ namespace MCPArtNavi.UserApp
             remove => this._setPixelRequested -= value;
         }
 
-        public event EventHandler RedrawPixelsRequested
+        public event EventHandler RedrawLayoutRequested
         {
             add => this._redrawPixelsRequested += value;
             remove => this._redrawPixelsRequested -= value;
@@ -74,7 +74,7 @@ namespace MCPArtNavi.UserApp
             return true;
         }
 
-        public void RedrawPixels()
+        public void RedrawLayout()
         {
             this._redrawPixelsRequested?.Invoke(this, new EventArgs());
         }

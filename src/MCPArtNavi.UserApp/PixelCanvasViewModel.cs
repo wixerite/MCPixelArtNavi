@@ -80,7 +80,7 @@ namespace MCPArtNavi.UserApp
                 }
             }
 
-            this.MapHandler.RedrawPixels();
+            this.MapHandler.RedrawLayout();
         }
 
         public PixelArtDocument GetPixelArt()
