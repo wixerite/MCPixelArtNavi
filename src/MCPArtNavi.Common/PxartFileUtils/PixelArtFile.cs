@@ -36,8 +36,8 @@ namespace MCPArtNavi.Common.PxartFileUtils
 
                 var docSec = new PropSection("mcpixart-file-doc");
                 metaSec.Items.Add(new PropItem("document-title", PropType.String, document.DocumentTitle));
-                metaSec.Items.Add(new PropItem("art-size", PropType.String, document.Size.ToString()));
-                metaSec.Items.Add(new PropItem("art-palette", PropType.String, String.Join(",",itemPalette.Select(item => item.ItemId))));
+                metaSec.Items.Add(new PropItem("art-size", PropType.Int16, (short)document.Size));
+                metaSec.Items.Add(new PropItem("art-palette", PropType.StringArray, itemPalette.Select(item => item.ItemId).ToArray()));
                 metaSec.Items.Add(new PropItem("art-pixels", PropType.Int32Array, pixelValues));
 
                 propWriter.Write(new Props(new PropSection[] { metaSec, docSec }));
@@ -64,8 +64,8 @@ namespace MCPArtNavi.Common.PxartFileUtils
 
             // ドキュメント ロード
             var documentTitle = (String)props.Sections["mcpixart-file-doc"].Items["document-title"].Value;
-            var artSize = (PixelArtSize)Enum.Parse(typeof(PixelArtSize), (String)props.Sections["mcpixart-file-doc"].Items["art-size"].Value);
-            var itemPalette = ((String)props.Sections["mcpixart-file-doc"].Items["art-palette"].Value).Split(',').Select(itemId => MCItemUtils.GetItemById(itemId)).ToArray();
+            var artSize = (PixelArtSize)props.Sections["mcpixart-file-doc"].Items["art-size"].Value;
+            var itemPalette = ((String[])props.Sections["mcpixart-file-doc"].Items["art-palette"].Value).Select(itemId => MCItemUtils.GetItemById(itemId)).ToArray();
             var pixels = ((Int32[])props.Sections["mcpixart-file-doc"].Items["art-pixels"].Value).Select(i => itemPalette[i]).ToArray();
 
             return new PixelArtDocument()

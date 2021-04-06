@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MCPArtNavi.Common
 {
-    public enum PixelArtSize
+    public enum PixelArtSize : short
     {
         Size016x016,
 
