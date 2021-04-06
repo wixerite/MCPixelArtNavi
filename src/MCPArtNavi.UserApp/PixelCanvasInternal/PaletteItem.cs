@@ -42,6 +42,7 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         /// </summary>
         /// <param name="color"></param>
         /// <param name="brush"></param>
+        /// <param name="pen"></param>
         /// <param name="mcItem"></param>
         private PaletteItem(Color color, Brush brush, IMCItem mcItem)
         {
