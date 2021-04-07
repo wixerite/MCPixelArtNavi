@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.ComponentModel;
+using System.Windows.Media.Imaging;
 
 using Microsoft.Win32;
 
@@ -12,9 +14,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 
 using MCPArtNavi.Common;
+using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
-using System.ComponentModel;
-using System.Windows.Media.Imaging;
 
 namespace MCPArtNavi.UserApp
 {
@@ -86,7 +87,7 @@ namespace MCPArtNavi.UserApp
 
         public DelegateCommand OpenCommand
         {
-            get => new DelegateCommand(async () => await Task.Run(async () => await this._open_commandAsync()));
+            get => new DelegateCommand(async () => await this._open_commandAsync());
         }
 
         public DelegateCommand ExportCommand
@@ -110,6 +111,11 @@ namespace MCPArtNavi.UserApp
             this.CanvasVisibility = Visibility.Visible;
             this.LoadingTextVisibility = Visibility.Collapsed;
             this.ShowChunkLinesChecked = true;
+
+            App.Current.MainWindow.Loaded += (sender, e) =>
+            {
+                this.CanvasViewModel.LoadPixelArt(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()));
+            };
         }
 
 

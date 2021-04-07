@@ -29,17 +29,13 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         protected override void OnRender(DrawingContext drawingContext)
         {
             // 基底呼び出し
-            System.Diagnostics.Debug.WriteLine("HandleableElement.OnRender: base.OnRender(drawingContext); start");
             base.OnRender(drawingContext);
-            System.Diagnostics.Debug.WriteLine("HandleableElement.OnRender: base.OnRender(drawingContext); completed");
 
             // イベント着火
-            System.Diagnostics.Debug.WriteLine("HandleableElement.OnRender: this._rendering?.Invoke... start");
             this._rendering?.Invoke(this, new HandleableElementRenderingEventArgs()
             {
                 DrawingContext = drawingContext
             });
-            System.Diagnostics.Debug.WriteLine("HandleableElement.OnRender: this._rendering?.Invoke... completed");
         }
 
 

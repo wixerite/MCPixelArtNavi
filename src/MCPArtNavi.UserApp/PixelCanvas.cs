@@ -117,9 +117,6 @@ namespace MCPArtNavi.UserApp
             })));
 
 
-
-
-
         // コンストラクタ
 
         public PixelCanvas()
@@ -145,6 +142,25 @@ namespace MCPArtNavi.UserApp
                 this._defaultChunkLineColorBrush.Freeze();
 
             this._canvasLayoutUpdating();
+
+            this.MouseLeftButtonDown += (sender, e) =>
+            {
+                //System.Diagnostics.Debug.WriteLine("Clicked!!" + e.GetPosition(this));
+
+                var point = e.GetPosition(this);
+                for (var i = 0; i < this._pixRectangels.Length; i++)
+                {
+                    for (var j = 0; j < this._pixRectangels[i].Length; j++)
+                    {
+                        var pixRect = this._pixRectangels[i][j].Rect;
+                        if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
+                            pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
+                            continue;
+
+                        System.Diagnostics.Debug.WriteLine("Clicked!! block= {0}, {1}", j, i);
+                    }
+                }
+            };
         }
 
 
@@ -170,24 +186,11 @@ namespace MCPArtNavi.UserApp
         /// </summary>
         private void _redrawLayout()
         {
-            // Dispatcher 経由で改善なし
-            System.Diagnostics.Debug.WriteLine("Redraw start (external)");
             this.Dispatcher.Invoke(() =>
             {
-                try
-                {
-                    System.Diagnostics.Debug.WriteLine("Redraw start");
-                    this._pixelMapLayer.InvalidateVisual();
-                    this._chunkLinesLayer.InvalidateVisual();
-                    System.Diagnostics.Debug.WriteLine("Redraw completed");
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("_redrawLayout error!!");
-                    throw ex;
-                }
+                this._pixelMapLayer.InvalidateVisual();
+                this._chunkLinesLayer.InvalidateVisual();
             }, DispatcherPriority.Send);
-            System.Diagnostics.Debug.WriteLine("Redraw completed (external)");
         }
 
         private void _initalizeRectangles()
@@ -293,54 +296,23 @@ namespace MCPArtNavi.UserApp
 
         private void _chunkLinesLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering start");
-
             // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
-
-            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering vertical lines ...");
             for (var i = 0; i < this._chunksVerticalLines.Length; i++)
             {
                 var rr = this._chunksVerticalLines[i];
-                try
-                {
-                    if (i % 10 == 0)
-                        System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering pix exec");
-
-                    fe.Dispatcher.Invoke(() =>
-                    {
-                        try
-                        {
-                            e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering error!!");
-                            throw ex;
-                        }
-                    });
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering error!! (External)");
-                    throw ex;
-                }
+                fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
             }
 
-            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering horizontal lines ...");
             for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
             {
                 var rr = this._chunksHorizontalLines[i];
                 fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
             }
-
-            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering complete");
         }
 
         private void _pixelMapLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering start");
-
             // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
             for (var i = 0; i < this._pixelWidth; i++)
@@ -348,32 +320,9 @@ namespace MCPArtNavi.UserApp
                 for (var j = 0; j < this._pixelHeight; j++)
                 {
                     var rr = this._pixRectangels[i][j];
-                    try
-                    {
-                        if (i % 500 == 0)
-                            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering pix exec");
-                        fe.Dispatcher.Invoke(() =>
-                        {
-                            try
-                            {
-                                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering error!!");
-                                throw ex;
-                            }
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering error!! (External)");
-                        throw ex;
-                    }
+                    fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering complete");
         }
     }
 }

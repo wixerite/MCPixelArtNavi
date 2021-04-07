@@ -159,6 +159,9 @@
   <data name="ItemName_red_wool" xml:space="preserve">
     <value>Red Wool</value>
   </data>
+  <data name="ItemName_sand" xml:space="preserve">
+    <value>Sand</value>
+  </data>
   <data name="ItemName_Unknown" xml:space="preserve">
     <value>Unknown Item</value>
   </data>

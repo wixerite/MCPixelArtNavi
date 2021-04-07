@@ -88,8 +88,8 @@
     <Compile Include="PixelCanvasInternal\Palette.cs" />
     <Compile Include="PixelCanvasInternal\PaletteItem.cs" />
     <Compile Include="PixelCanvasInternal\RenderRectangle.cs" />
-    <Compile Include="PixelCanvasMapHandler.cs" />
-    <Compile Include="PixelCanvasUpdateMode.cs" />
+    <Compile Include="PixelCanvasInternal\PixelCanvasMapHandler.cs" />
+    <Compile Include="PixelCanvasInternal\PixelCanvasUpdateMode.cs" />
     <Compile Include="PixelCanvasViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -187,6 +187,15 @@ namespace MCPArtNavi.Common.Properties {
         }
         
         /// <summary>
+        ///   Sand に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ItemName_sand {
+            get {
+                return ResourceManager.GetString("ItemName_sand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Unknown Item に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ItemName_Unknown {

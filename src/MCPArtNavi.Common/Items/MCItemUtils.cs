@@ -19,8 +19,10 @@ namespace MCPArtNavi.Common.Items
 
         static MCItemUtils()
         {
+            // 一番最初のアイテムが起動時の空ドキュメントの fill として利用されます
             EnabledItems = new List<IMCItem>()
             {
+                new MCSand(),
                 new MCBlackWool(),
                 new MCWhiteWool(),
             };

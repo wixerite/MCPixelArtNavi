@@ -52,8 +52,8 @@ namespace MCPArtNavi.UserApp
 
         public PixelCanvasViewModel()
         {
-            this.PixelArtWidth = 128;
-            this.PixelArtHeight = 128;
+            this.PixelArtWidth = 16;
+            this.PixelArtHeight = 16;
 
             this.MapHandler = new PixelCanvasMapHandler();
 
@@ -65,13 +65,12 @@ namespace MCPArtNavi.UserApp
 
         public void LoadPixelArt(PixelArtDocument document)
         {
-            System.Diagnostics.Debug.WriteLine("MapHandler invoke start");
             this.MapHandler.InvokeDispatcher(() =>
             {
+                // RedrawLayout の処理が走る前に PixelCanvas に対してサイズ変更を反映させる
                 this.PixelArtWidth = document.Size.GetWidth();
                 this.PixelArtHeight = document.Size.GetHeight();
             });
-            System.Diagnostics.Debug.WriteLine("MapHandler invoke completed");
 
             var p = 0;
             for (var i = 0; i < this.PixelArtHeight; i++)
@@ -86,11 +85,7 @@ namespace MCPArtNavi.UserApp
                 }
             }
 
-            //this.MapHandler.InvokeDispatcher(() => {
-            System.Diagnostics.Debug.WriteLine("this.MapHandler.RedrawLayout(); start");
             this.MapHandler.RedrawLayout();
-            System.Diagnostics.Debug.WriteLine("this.MapHandler.RedrawLayout(); completed");
-            //});
         }
 
         public PixelArtDocument GetPixelArt()

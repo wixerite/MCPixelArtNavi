@@ -46,5 +46,21 @@ namespace MCPArtNavi.Common
             if (w * h != pixels.Length)
                 throw new ArgumentOutOfRangeException();
         }
+
+
+        // 公開静的メソッド
+
+        public static PixelArtDocument GetEmptyDocument(PixelArtSize size, IMCItem fill)
+        {
+            var pixels = new IMCItem[size.GetWidth() * size.GetHeight()];
+            for (var i = 0; i < pixels.Length; i++)
+                pixels[i] = fill;
+
+            var doc = new PixelArtDocument();
+            doc.Size = PixelArtSize.Size128x128;
+            doc.Pixels = pixels;
+
+            return doc;
+        }
     }
 }
