@@ -138,6 +138,12 @@ namespace MCPArtNavi.UserApp
 
             this._defaultColorBrush = new SolidColorBrush(Colors.Silver);
             this._defaultChunkLineColorBrush = new SolidColorBrush(Colors.Blue);
+
+            if (this._defaultColorBrush.CanFreeze)
+                this._defaultColorBrush.Freeze();
+            if (this._defaultChunkLineColorBrush.CanFreeze)
+                this._defaultChunkLineColorBrush.Freeze();
+
             this._canvasLayoutUpdating();
         }
 
@@ -165,10 +171,12 @@ namespace MCPArtNavi.UserApp
         private void _redrawLayout()
         {
             // Dispatcher 経由で改善なし
+            System.Diagnostics.Debug.WriteLine("Redraw start (external)");
             this.Dispatcher.Invoke(() =>
             {
                 try
                 {
+                    System.Diagnostics.Debug.WriteLine("Redraw start");
                     this._pixelMapLayer.InvalidateVisual();
                     this._chunkLinesLayer.InvalidateVisual();
                     System.Diagnostics.Debug.WriteLine("Redraw completed");
@@ -178,7 +186,8 @@ namespace MCPArtNavi.UserApp
                     System.Diagnostics.Debug.WriteLine("_redrawLayout error!!");
                     throw ex;
                 }
-            });
+            }, DispatcherPriority.Send);
+            System.Diagnostics.Debug.WriteLine("Redraw completed (external)");
         }
 
         private void _initalizeRectangles()
@@ -284,14 +293,20 @@ namespace MCPArtNavi.UserApp
 
         private void _chunkLinesLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering start");
+
             // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
+
+            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering vertical lines ...");
             for (var i = 0; i < this._chunksVerticalLines.Length; i++)
             {
                 var rr = this._chunksVerticalLines[i];
                 try
                 {
-                    System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering pix exec");
+                    if (i % 10 == 0)
+                        System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering pix exec");
+
                     fe.Dispatcher.Invoke(() =>
                     {
                         try
@@ -312,14 +327,20 @@ namespace MCPArtNavi.UserApp
                 }
             }
 
+            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering horizontal lines ...");
             for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
             {
                 var rr = this._chunksHorizontalLines[i];
                 fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
             }
+
+            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering complete");
         }
+
         private void _pixelMapLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering start");
+
             // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
             for (var i = 0; i < this._pixelWidth; i++)
@@ -329,7 +350,8 @@ namespace MCPArtNavi.UserApp
                     var rr = this._pixRectangels[i][j];
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering pix exec");
+                        if (i % 500 == 0)
+                            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering pix exec");
                         fe.Dispatcher.Invoke(() =>
                         {
                             try
@@ -350,6 +372,8 @@ namespace MCPArtNavi.UserApp
                     }
                 }
             }
+
+            System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering complete");
         }
     }
 }

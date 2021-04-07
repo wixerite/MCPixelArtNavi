@@ -65,13 +65,13 @@ namespace MCPArtNavi.UserApp
 
         public void LoadPixelArt(PixelArtDocument document)
         {
-            System.Diagnostics.Debug.WriteLine("MainWindow invoke");
+            System.Diagnostics.Debug.WriteLine("MapHandler invoke start");
             this.MapHandler.InvokeDispatcher(() =>
             {
                 this.PixelArtWidth = document.Size.GetWidth();
                 this.PixelArtHeight = document.Size.GetHeight();
             });
-            System.Diagnostics.Debug.WriteLine("MainWindow invoke");
+            System.Diagnostics.Debug.WriteLine("MapHandler invoke completed");
 
             var p = 0;
             for (var i = 0; i < this.PixelArtHeight; i++)
@@ -86,8 +86,11 @@ namespace MCPArtNavi.UserApp
                 }
             }
 
-            //this.MapHandler.InvokeDispatcher(() => this.MapHandler.RedrawLayout();
-            //);
+            //this.MapHandler.InvokeDispatcher(() => {
+            System.Diagnostics.Debug.WriteLine("this.MapHandler.RedrawLayout(); start");
+            this.MapHandler.RedrawLayout();
+            System.Diagnostics.Debug.WriteLine("this.MapHandler.RedrawLayout(); completed");
+            //});
         }
 
         public PixelArtDocument GetPixelArt()

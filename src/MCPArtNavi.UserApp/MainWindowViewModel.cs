@@ -86,7 +86,7 @@ namespace MCPArtNavi.UserApp
 
         public DelegateCommand OpenCommand
         {
-            get => new DelegateCommand(async () => await this._open_commandAsync());
+            get => new DelegateCommand(async () => await Task.Run(async () => await this._open_commandAsync()));
         }
 
         public DelegateCommand ExportCommand
@@ -150,17 +150,22 @@ namespace MCPArtNavi.UserApp
                     doc = PixelArtFile.LoadFrom(fs);
                 }
 
-                //this.CanvasVisibility = Visibility.Hidden;
-                //this.LoadingTextVisibility = Visibility.Visible;
+                
                 System.Diagnostics.Debug.WriteLine("Start load doc (external)");
+
                 await Task.Run(() =>
                 {
+                    this.CanvasVisibility = Visibility.Hidden;
+                    this.LoadingTextVisibility = Visibility.Visible;
+
                     System.Diagnostics.Debug.WriteLine("Start load doc");
                     this.CanvasViewModel.LoadPixelArt(doc);
                     System.Diagnostics.Debug.WriteLine("Complete load doc");
+
+                    this.CanvasVisibility = Visibility.Visible;
+                    this.LoadingTextVisibility = Visibility.Collapsed;
                 });
-                //this.CanvasVisibility = Visibility.Visible;
-                //this.LoadingTextVisibility = Visibility.Collapsed;
+
                 System.Diagnostics.Debug.WriteLine("Complete load doc (external)");
             }
         }

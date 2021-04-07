@@ -59,6 +59,9 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
             var color = (Color)ColorConverter.ConvertFromString(mcItem.ItemColor);
             var brush = new SolidColorBrush(color);
 
+            if (brush.CanFreeze)
+                brush.Freeze();
+
             return new PaletteItem(color, brush, mcItem);
         }
     }
