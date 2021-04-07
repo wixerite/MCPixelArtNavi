@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MCPArtNavi.UserApp
 {
@@ -12,7 +13,9 @@ namespace MCPArtNavi.UserApp
         // 非公開フィールド
         private EventHandler<PixelEventArgs> _getPixelRequested;
         private EventHandler<PixelEventArgs> _setPixelRequested;
-        private EventHandler _redrawPixelsRequested;
+        private EventHandler _redrawLayoutRequested;
+        private EventHandler<CanvasToBitmapEventArgs> _canvasToBitmapRequested;
+        private EventHandler<InvokeDispatcherEventArgs> _invokeDispatcherRequested;
 
 
         // 公開イベント
@@ -31,8 +34,20 @@ namespace MCPArtNavi.UserApp
 
         public event EventHandler RedrawLayoutRequested
         {
-            add => this._redrawPixelsRequested += value;
-            remove => this._redrawPixelsRequested -= value;
+            add => this._redrawLayoutRequested += value;
+            remove => this._redrawLayoutRequested -= value;
+        }
+
+        public event EventHandler<CanvasToBitmapEventArgs> CanvasToBitmapRequested
+        {
+            add => this._canvasToBitmapRequested += value;
+            remove => this._canvasToBitmapRequested -= value;
+        }
+
+        public event EventHandler<InvokeDispatcherEventArgs> InvokeDispatcherRequested
+        {
+            add => this._invokeDispatcherRequested += value;
+            remove => this._invokeDispatcherRequested -= value;
         }
 
 
@@ -76,7 +91,29 @@ namespace MCPArtNavi.UserApp
 
         public void RedrawLayout()
         {
-            this._redrawPixelsRequested?.Invoke(this, new EventArgs());
+            this._redrawLayoutRequested?.Invoke(this, new EventArgs());
+        }
+
+        public BitmapSource CanvasToBitmap()
+        {
+            try
+            {
+                var eventArgs = new CanvasToBitmapEventArgs();
+                this._canvasToBitmapRequested?.Invoke(this, eventArgs);
+                return eventArgs.Bitmap;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"{ex.GetType().Name}: ${ex.Message}");
+                System.Diagnostics.Debug.WriteLine(ex.StackTrace);
+            }
+
+            return null;
+        }
+
+        public void InvokeDispatcher(Action action)
+        {
+            this._invokeDispatcherRequested?.Invoke(this, new InvokeDispatcherEventArgs() { Action = action });
         }
 
         
@@ -89,6 +126,24 @@ namespace MCPArtNavi.UserApp
             public int Y { get; set; }
 
             public Brush Brush { get; set; }
+        }
+
+        public class CanvasToBitmapEventArgs
+        {
+            public BitmapSource Bitmap
+            {
+                get;
+                set;
+            }
+        }
+
+        public class InvokeDispatcherEventArgs
+        {
+            public Action Action
+            {
+                get;
+                set;
+            }
         }
     }
 }

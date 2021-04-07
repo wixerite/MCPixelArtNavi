@@ -126,6 +126,9 @@
   <data name="MainWindow_TopMenu_File_Export" xml:space="preserve">
     <value>Export(_E)...</value>
   </data>
+  <data name="MainWindow_TopMenu_File_Import" xml:space="preserve">
+    <value>Import(_I)...</value>
+  </data>
   <data name="MainWindow_TopMenu_File_NewFile" xml:space="preserve">
     <value>New File(_N)...</value>
   </data>

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
@@ -18,6 +19,19 @@ namespace MCPArtNavi.UserApp
     public class PixelCanvas : UserControl
     {
         // 非公開フィールド
+
+        /// <summary>
+        /// <see cref="PixelWidth"/> と同じ値が格納されます。<see cref="PixelWidth"/> は依存関係プロパティのため、別スレッドから利用ができないため、
+        /// 値を取得する際は代わりにこちらを使用します。
+        /// </summary>
+        private int _pixelWidth;
+
+        /// <summary>
+        /// <see cref="PixelHeight"/> と同じ値が格納されます。<see cref="PixelHeight"/> は依存関係プロパティのため、別スレッドから利用ができないため、
+        /// 値を取得する際は代わりにこちらを使用します。
+        /// </summary>
+        private int _pixelHeight;
+
         private Grid _rootLayer;
         private HandleableElement _pixelMapLayer;
         private HandleableElement _chunkLinesLayer;
@@ -69,6 +83,9 @@ namespace MCPArtNavi.UserApp
                     oldHandler.GetPixelRequested -= _this._mapHandler_getPixelRequested;
                     oldHandler.SetPixelRequested -= _this._mapHandler_setPixelRequested;
                     oldHandler.RedrawLayoutRequested -= _this._mapHandler_redrawPixelsRequested;
+                    oldHandler.CanvasToBitmapRequested -= _this._mapHandler_canvasToBitmapRequested;
+                    oldHandler.InvokeDispatcherRequested -= _this._mapHandler_invokeDispatcherRequested;
+                    
                 }
 
                 if (e.NewValue as PixelCanvasMapHandler != null)
@@ -77,6 +94,8 @@ namespace MCPArtNavi.UserApp
                     newHandler.GetPixelRequested += _this._mapHandler_getPixelRequested;
                     newHandler.SetPixelRequested += _this._mapHandler_setPixelRequested;
                     newHandler.RedrawLayoutRequested += _this._mapHandler_redrawPixelsRequested;
+                    newHandler.CanvasToBitmapRequested += _this._mapHandler_canvasToBitmapRequested;
+                    newHandler.InvokeDispatcherRequested += _this._mapHandler_invokeDispatcherRequested;
                 }
             })));
 
@@ -123,42 +142,6 @@ namespace MCPArtNavi.UserApp
         }
 
 
-
-
-        // 限定公開メソッド
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            // 基底呼び出し
-            base.OnRender(drawingContext);
-
-            // 描画
-
-            // オブジェクト描画 :: ピクセル
-            //for (var i = 0; i < this.PixelWidth; i++)
-            //{
-            //    for (var j = 0; j < this.PixelHeight; j++)
-            //    {
-            //        var rr = this._pixRectangels[i][j];
-            //        drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-            //    }
-            //}
-
-            // オブジェクト描画 :: チャンク線
-            //for (var i = 0; i < this._chunksVerticalLines.Length; i++)
-            //{
-            //    var rr = this._chunksVerticalLines[i];
-            //    drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-            //}
-
-            //for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
-            //{
-            //    var rr = this._chunksHorizontalLines[i];
-            //    drawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
-            //}
-        }
-
-
         // 非公開メソッド
 
         /// <summary>
@@ -166,6 +149,12 @@ namespace MCPArtNavi.UserApp
         /// </summary>
         private void _canvasLayoutUpdating()
         {
+            this.Dispatcher.Invoke(() =>
+            {
+                this._pixelWidth = this.PixelWidth;
+                this._pixelHeight = this.PixelHeight;
+            });
+
             this._initalizeRectangles();
             this._initializeChunkLines();
         }
@@ -175,18 +164,31 @@ namespace MCPArtNavi.UserApp
         /// </summary>
         private void _redrawLayout()
         {
-            this._pixelMapLayer.InvalidateVisual();
-            this._chunkLinesLayer.InvalidateVisual();
+            // Dispatcher 経由で改善なし
+            this.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    this._pixelMapLayer.InvalidateVisual();
+                    this._chunkLinesLayer.InvalidateVisual();
+                    System.Diagnostics.Debug.WriteLine("Redraw completed");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("_redrawLayout error!!");
+                    throw ex;
+                }
+            });
         }
 
         private void _initalizeRectangles()
         {
-            this._pixRectangels = new RenderRectangle[this.PixelHeight][];
+            this._pixRectangels = new RenderRectangle[this._pixelHeight][];
 
-            for (var i = 0; i < this.PixelHeight; i++)
+            for (var i = 0; i < this._pixelHeight; i++)
             {
-                this._pixRectangels[i] = new RenderRectangle[this.PixelWidth];
-                for (var j = 0; j < this.PixelWidth; j++)
+                this._pixRectangels[i] = new RenderRectangle[this._pixelWidth];
+                for (var j = 0; j < this._pixelWidth; j++)
                 {
                     this._pixRectangels[i][j] = new RenderRectangle();
                     this._pixRectangels[i][j].Brush = this._defaultColorBrush;
@@ -200,27 +202,27 @@ namespace MCPArtNavi.UserApp
             var chunkSize = 16;
 
             // Vertical lines
-            this._chunksVerticalLines = new RenderRectangle[(this.PixelWidth / chunkSize) + 1];
+            this._chunksVerticalLines = new RenderRectangle[(this._pixelWidth / chunkSize) + 1];
             for (var i = 0; i < this._chunksVerticalLines.Length; i++)
             {
                 this._chunksVerticalLines[i] = new RenderRectangle();
                 this._chunksVerticalLines[i].Brush = this._defaultChunkLineColorBrush;
-                this._chunksVerticalLines[i].Rect = new Rect(i * (double) chunkSize, 0d, 0.2d, (double)this.PixelHeight);
+                this._chunksVerticalLines[i].Rect = new Rect(i * (double) chunkSize, 0d, 0.2d, (double)this._pixelHeight);
             }
 
             // Horizontal lines
-            this._chunksHorizontalLines = new RenderRectangle[(this.PixelHeight / chunkSize) + 1];
+            this._chunksHorizontalLines = new RenderRectangle[(this._pixelHeight / chunkSize) + 1];
             for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
             {
                 this._chunksHorizontalLines[i] = new RenderRectangle();
                 this._chunksHorizontalLines[i].Brush = this._defaultChunkLineColorBrush;
-                this._chunksHorizontalLines[i].Rect = new Rect(0d, i * (double)chunkSize, (double)this.PixelWidth, 0.2d);
+                this._chunksHorizontalLines[i].Rect = new Rect(0d, i * (double)chunkSize, (double)this._pixelWidth, 0.2d);
             }
         }
 
         private void _mapHandler_getPixelRequested(Object sender, PixelCanvasMapHandler.PixelEventArgs e)
         {
-            if (this.PixelWidth < e.X || this.PixelHeight < e.Y)
+            if (this._pixelWidth < e.X || this._pixelHeight < e.Y)
                 throw new ArgumentOutOfRangeException();
 
             var pixBrush = this._pixRectangels[e.Y][e.X].Brush;
@@ -232,7 +234,7 @@ namespace MCPArtNavi.UserApp
 
         private void _mapHandler_setPixelRequested(Object sender, PixelCanvasMapHandler.PixelEventArgs e)
         {
-            if (this.PixelWidth < e.X || this.PixelHeight < e.Y)
+            if (this._pixelWidth < e.X || this._pixelHeight < e.Y)
                 throw new ArgumentOutOfRangeException();
 
             if (e.Brush == null)
@@ -246,31 +248,106 @@ namespace MCPArtNavi.UserApp
             this._redrawLayout();
         }
 
+        private void _mapHandler_canvasToBitmapRequested(Object sender, PixelCanvasMapHandler.CanvasToBitmapEventArgs e)
+        {
+            var bounds = VisualTreeHelper.GetDescendantBounds(this);
+            bounds.Width *= 50;
+            bounds.Height *= 50;
+
+            var bitmap = new RenderTargetBitmap(
+                (int)bounds.Width,
+                (int)bounds.Height,
+                96.0,
+                96.0,
+                PixelFormats.Pbgra32);
+
+            var dv = new DrawingVisual();
+            using (var dc = dv.RenderOpen())
+            {
+                var vb = new VisualBrush(this);
+                dc.DrawRectangle(vb, null, bounds);
+            }
+
+            bitmap.Render(dv);
+            bitmap.Freeze();
+
+            e.Bitmap = bitmap;
+        }
+
+        private void _mapHandler_invokeDispatcherRequested(Object sender, PixelCanvasMapHandler.InvokeDispatcherEventArgs e)
+        {
+            this.Dispatcher.Invoke(e.Action);
+        }
+
 
         // 非公開メソッド :: 子レイヤー描画
 
         private void _chunkLinesLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
+            // Dispatcher 経由で改善なし
+            var fe = (FrameworkElement)sender;
             for (var i = 0; i < this._chunksVerticalLines.Length; i++)
             {
                 var rr = this._chunksVerticalLines[i];
-                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering pix exec");
+                    fe.Dispatcher.Invoke(() =>
+                    {
+                        try
+                        {
+                            e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering error!!");
+                            throw ex;
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("_chunkLinesLayer_Rendering error!! (External)");
+                    throw ex;
+                }
             }
 
             for (var i = 0; i < this._chunksHorizontalLines.Length; i++)
             {
                 var rr = this._chunksHorizontalLines[i];
-                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
             }
         }
         private void _pixelMapLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
-            for (var i = 0; i < this.PixelWidth; i++)
+            // Dispatcher 経由で改善なし
+            var fe = (FrameworkElement)sender;
+            for (var i = 0; i < this._pixelWidth; i++)
             {
-                for (var j = 0; j < this.PixelHeight; j++)
+                for (var j = 0; j < this._pixelHeight; j++)
                 {
                     var rr = this._pixRectangels[i][j];
-                    e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering pix exec");
+                        fe.Dispatcher.Invoke(() =>
+                        {
+                            try
+                            {
+                                e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering error!!");
+                                throw ex;
+                            }
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("_pixelMapLayer_Rendering error!! (External)");
+                        throw ex;
+                    }
                 }
             }
         }

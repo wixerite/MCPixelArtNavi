@@ -10,6 +10,7 @@ using Prism.Mvvm;
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.UserApp.PixelCanvasInternal;
+using System.Windows.Media.Imaging;
 
 namespace MCPArtNavi.UserApp
 {
@@ -64,8 +65,13 @@ namespace MCPArtNavi.UserApp
 
         public void LoadPixelArt(PixelArtDocument document)
         {
-            this.PixelArtWidth = document.Size.GetWidth();
-            this.PixelArtHeight = document.Size.GetHeight();
+            System.Diagnostics.Debug.WriteLine("MainWindow invoke");
+            this.MapHandler.InvokeDispatcher(() =>
+            {
+                this.PixelArtWidth = document.Size.GetWidth();
+                this.PixelArtHeight = document.Size.GetHeight();
+            });
+            System.Diagnostics.Debug.WriteLine("MainWindow invoke");
 
             var p = 0;
             for (var i = 0; i < this.PixelArtHeight; i++)
@@ -80,7 +86,8 @@ namespace MCPArtNavi.UserApp
                 }
             }
 
-            this.MapHandler.RedrawLayout();
+            //this.MapHandler.InvokeDispatcher(() => this.MapHandler.RedrawLayout();
+            //);
         }
 
         public PixelArtDocument GetPixelArt()
@@ -115,6 +122,11 @@ namespace MCPArtNavi.UserApp
             document.Pixels = pixels;
             
             return document;
+        }
+
+        public BitmapSource CanvasToBitmap()
+        {
+            return this.MapHandler.CanvasToBitmap();
         }
     }
 }

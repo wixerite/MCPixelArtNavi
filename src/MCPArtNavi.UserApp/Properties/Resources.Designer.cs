@@ -88,6 +88,15 @@ namespace MCPArtNavi.UserApp.Properties {
         }
         
         /// <summary>
+        ///   Import(_I)... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainWindow_TopMenu_File_Import {
+            get {
+                return ResourceManager.GetString("MainWindow_TopMenu_File_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   New File(_N)... に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainWindow_TopMenu_File_NewFile {

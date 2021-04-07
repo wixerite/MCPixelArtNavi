@@ -14,6 +14,7 @@ using Prism.Mvvm;
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.PxartFileUtils;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
 
 namespace MCPArtNavi.UserApp
 {
@@ -85,7 +86,12 @@ namespace MCPArtNavi.UserApp
 
         public DelegateCommand OpenCommand
         {
-            get => new DelegateCommand(this._open_command);
+            get => new DelegateCommand(async () => await this._open_commandAsync());
+        }
+
+        public DelegateCommand ExportCommand
+        {
+            get => new DelegateCommand(this._export_command);
         }
 
         public DelegateCommand LoadExampleImageCommand
@@ -128,7 +134,7 @@ namespace MCPArtNavi.UserApp
 
         // 非公開メソッド
 
-        private void _open_command()
+        private async Task _open_commandAsync()
         {
             var openFileDialog = new OpenFileDialog()
             {
@@ -144,11 +150,18 @@ namespace MCPArtNavi.UserApp
                     doc = PixelArtFile.LoadFrom(fs);
                 }
 
-                this.CanvasVisibility = Visibility.Hidden;
-                this.LoadingTextVisibility = Visibility.Visible;
-                this.CanvasViewModel.LoadPixelArt(doc);
-                this.CanvasVisibility = Visibility.Visible;
-                this.LoadingTextVisibility = Visibility.Collapsed;
+                //this.CanvasVisibility = Visibility.Hidden;
+                //this.LoadingTextVisibility = Visibility.Visible;
+                System.Diagnostics.Debug.WriteLine("Start load doc (external)");
+                await Task.Run(() =>
+                {
+                    System.Diagnostics.Debug.WriteLine("Start load doc");
+                    this.CanvasViewModel.LoadPixelArt(doc);
+                    System.Diagnostics.Debug.WriteLine("Complete load doc");
+                });
+                //this.CanvasVisibility = Visibility.Visible;
+                //this.LoadingTextVisibility = Visibility.Collapsed;
+                System.Diagnostics.Debug.WriteLine("Complete load doc (external)");
             }
         }
 
@@ -167,6 +180,26 @@ namespace MCPArtNavi.UserApp
                 using (var fs = File.OpenWrite(saveFileDialog.FileName))
                 {
                     PixelArtFile.SaveTo(fs, doc);
+                }
+            }
+        }
+
+        private void _export_command()
+        {
+            var saveFileDialog = new SaveFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = "export.png",
+                Filter = "PNG Image (*.png)|*.png|All Files (*.*)|*.*"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                using (var fs = File.OpenWrite(saveFileDialog.FileName))
+                {
+                    var encoder = new PngBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(this.CanvasViewModel.CanvasToBitmap()));
+                    encoder.Save(fs);
                 }
             }
         }
