@@ -16,6 +16,8 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         private EventHandler _redrawLayoutRequested;
         private EventHandler<CanvasToBitmapEventArgs> _canvasToBitmapRequested;
         private EventHandler<InvokeDispatcherEventArgs> _invokeDispatcherRequested;
+        private EventHandler<PixelMouseEventArgs> _canvasMouseDown;
+        private EventHandler<PixelMouseEventArgs> _canvasMouseMove;
 
 
         // 公開イベント
@@ -50,6 +52,40 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
             remove => this._invokeDispatcherRequested -= value;
         }
 
+        public event EventHandler<PixelMouseEventArgs> CanvasMouseDown
+        {
+            add => this._canvasMouseDown += value;
+            remove => this._canvasMouseDown -= value;
+        }
+
+        public event EventHandler<PixelMouseEventArgs> CanvasMouseMove
+        {
+            add => this._canvasMouseMove += value;
+            remove => this._canvasMouseMove -= value;
+        }
+
+
+        // 非公開メソッド
+
+        private void _canvas_canvasMouseDown(Object sender, PixelCanvas.PixelMouseEventArgs e)
+        {
+            this._canvasMouseDown?.Invoke(this, new PixelMouseEventArgs()
+            {
+                X = e.X,
+                Y = e.Y,
+                PixelBrush = e.PixelBrush,
+            });
+        }
+
+        private void _canvas_canvasMouseMove(Object sender, PixelCanvas.PixelMouseEventArgs e)
+        {
+            this._canvasMouseMove(this, new PixelMouseEventArgs()
+            {
+                X = e.X,
+                Y = e.Y,
+                PixelBrush = e.PixelBrush,
+            });
+        }
 
 
         // 公開メソッド
@@ -116,6 +152,18 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
             this._invokeDispatcherRequested?.Invoke(this, new InvokeDispatcherEventArgs() { Action = action });
         }
 
+        public void OnRegistered(PixelCanvas canvas)
+        {
+            canvas.PixelMouseDown += this._canvas_canvasMouseDown;
+            canvas.PixelMouseMove += this._canvas_canvasMouseMove;
+        }
+
+        public void OnUnregistered(PixelCanvas canvas)
+        {
+            canvas.PixelMouseDown -= this._canvas_canvasMouseDown;
+            canvas.PixelMouseMove -= this._canvas_canvasMouseMove;
+        }
+
         
         // その他
 
@@ -145,5 +193,7 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
                 set;
             }
         }
+
+        public class PixelMouseEventArgs : PixelCanvas.PixelMouseEventArgs { }
     }
 }

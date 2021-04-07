@@ -77,6 +77,13 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._chunkLinesVisibility, value);
         }
 
+        private string _onMouseItemNameText;
+        public string OnMouseItemNameText
+        {
+            get => this._onMouseItemNameText;
+            set => this.SetProperty(ref this._onMouseItemNameText, value);
+        }
+
 
         // コマンド
 
@@ -105,8 +112,6 @@ namespace MCPArtNavi.UserApp
 
         public MainWindowViewModel()
         {
-            this.CanvasViewModel = new PixelCanvasViewModel();
-            this.CanvasZoom = 4.0d;
 
             this.CanvasVisibility = Visibility.Visible;
             this.LoadingTextVisibility = Visibility.Collapsed;
@@ -116,6 +121,10 @@ namespace MCPArtNavi.UserApp
             {
                 this.CanvasViewModel.LoadPixelArt(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()));
             };
+
+            this.CanvasViewModel = new PixelCanvasViewModel();
+            this.CanvasViewModel.ItemMouseMove += (sender, e) => this.OnMouseItemNameText = e.Item.ItemName;
+            this.CanvasZoom = 4.0d;
         }
 
 

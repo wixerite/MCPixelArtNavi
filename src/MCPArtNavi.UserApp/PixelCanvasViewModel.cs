@@ -19,6 +19,17 @@ namespace MCPArtNavi.UserApp
         // 非公開フィールド
         private Palette _palette;
 
+        private EventHandler<ItemMouseEventArgs> _itemMouseMove;
+
+
+        // 公開イベント
+
+        public event EventHandler<ItemMouseEventArgs> ItemMouseMove
+        {
+            add => this._itemMouseMove += value;
+            remove => this._itemMouseMove -= value;
+        }
+
 
         // バインディング プロパティ
 
@@ -55,9 +66,27 @@ namespace MCPArtNavi.UserApp
             this.PixelArtWidth = 16;
             this.PixelArtHeight = 16;
 
-            this.MapHandler = new PixelCanvasMapHandler();
-
             this._palette = new Palette();
+
+            this.MapHandler = new PixelCanvasMapHandler();
+            this.MapHandler.CanvasMouseDown += _mapHandler_CanvasMouseDown;
+            this.MapHandler.CanvasMouseMove += _mapHandler_CanvasMouseMove;
+        }
+
+        private void _mapHandler_CanvasMouseMove(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
+        {
+            this._itemMouseMove?.Invoke(this, new ItemMouseEventArgs()
+            {
+                Item = this._palette.GetByBrush(e.PixelBrush).MCItem
+            });
+        }
+
+
+        // 非公開メソッド
+
+        private void _mapHandler_CanvasMouseDown(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(this._palette.GetByBrush(e.PixelBrush).MCItem.ItemName);
         }
 
 
@@ -125,6 +154,18 @@ namespace MCPArtNavi.UserApp
         public BitmapSource CanvasToBitmap()
         {
             return this.MapHandler.CanvasToBitmap();
+        }
+
+        
+        // その他
+
+        public class ItemMouseEventArgs
+        {
+            public IMCItem Item
+            {
+                get;
+                set;
+            }
         }
     }
 }

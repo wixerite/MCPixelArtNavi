@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -41,6 +42,24 @@ namespace MCPArtNavi.UserApp
         private RenderRectangle[] _chunksHorizontalLines;
         private SolidColorBrush _defaultColorBrush;
         private SolidColorBrush _defaultChunkLineColorBrush;
+
+        private EventHandler<PixelMouseEventArgs> _pixelMouseDown;
+        private EventHandler<PixelMouseEventArgs> _pixelMouseMove;
+
+
+        // イベント
+
+        public event EventHandler<PixelMouseEventArgs> PixelMouseDown
+        {
+            add => this._pixelMouseDown += value;
+            remove => this._pixelMouseDown -= value;
+        }
+
+        public event EventHandler<PixelMouseEventArgs> PixelMouseMove
+        {
+            add => this._pixelMouseMove += value;
+            remove => this._pixelMouseMove -= value;
+        }
 
 
         // 依存関係プロパティ
@@ -85,6 +104,7 @@ namespace MCPArtNavi.UserApp
                     oldHandler.RedrawLayoutRequested -= _this._mapHandler_redrawPixelsRequested;
                     oldHandler.CanvasToBitmapRequested -= _this._mapHandler_canvasToBitmapRequested;
                     oldHandler.InvokeDispatcherRequested -= _this._mapHandler_invokeDispatcherRequested;
+                    oldHandler.OnUnregistered(_this);
                     
                 }
 
@@ -96,6 +116,7 @@ namespace MCPArtNavi.UserApp
                     newHandler.RedrawLayoutRequested += _this._mapHandler_redrawPixelsRequested;
                     newHandler.CanvasToBitmapRequested += _this._mapHandler_canvasToBitmapRequested;
                     newHandler.InvokeDispatcherRequested += _this._mapHandler_invokeDispatcherRequested;
+                    newHandler.OnRegistered(_this);
                 }
             })));
 
@@ -143,24 +164,8 @@ namespace MCPArtNavi.UserApp
 
             this._canvasLayoutUpdating();
 
-            this.MouseLeftButtonDown += (sender, e) =>
-            {
-                //System.Diagnostics.Debug.WriteLine("Clicked!!" + e.GetPosition(this));
-
-                var point = e.GetPosition(this);
-                for (var i = 0; i < this._pixRectangels.Length; i++)
-                {
-                    for (var j = 0; j < this._pixRectangels[i].Length; j++)
-                    {
-                        var pixRect = this._pixRectangels[i][j].Rect;
-                        if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
-                            pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
-                            continue;
-
-                        System.Diagnostics.Debug.WriteLine("Clicked!! block= {0}, {1}", j, i);
-                    }
-                }
-            };
+            this.MouseDown += this._mouseDown;
+            this.MouseMove += this._mouseMove;
         }
 
 
@@ -291,6 +296,50 @@ namespace MCPArtNavi.UserApp
             this.Dispatcher.Invoke(e.Action);
         }
 
+        private void _mouseDown(Object sender, MouseButtonEventArgs e)
+        {
+            var point = e.GetPosition(this);
+            for (var i = 0; i < this._pixRectangels.Length; i++)
+            {
+                for (var j = 0; j < this._pixRectangels[i].Length; j++)
+                {
+                    var pixRect = this._pixRectangels[i][j].Rect;
+                    if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
+                        pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
+                        continue;
+
+                    this._pixelMouseDown?.Invoke(this, new PixelMouseEventArgs()
+                    {
+                        PixelBrush = this._pixRectangels[j][i].Brush,
+                        X = j,
+                        Y = i,
+                    });
+                }
+            }
+        }
+
+        private void _mouseMove(Object sender, MouseEventArgs e)
+        {
+            var point = e.GetPosition(this);
+            for (var i = 0; i < this._pixRectangels.Length; i++)
+            {
+                for (var j = 0; j < this._pixRectangels[i].Length; j++)
+                {
+                    var pixRect = this._pixRectangels[i][j].Rect;
+                    if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
+                        pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
+                        continue;
+
+                    this._pixelMouseMove?.Invoke(this, new PixelMouseEventArgs()
+                    {
+                        PixelBrush = this._pixRectangels[j][i].Brush,
+                        X = j,
+                        Y = i,
+                    });
+                }
+            }
+        }
+
 
         // 非公開メソッド :: 子レイヤー描画
 
@@ -322,6 +371,32 @@ namespace MCPArtNavi.UserApp
                     var rr = this._pixRectangels[i][j];
                     fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
                 }
+            }
+        }
+
+
+        // その他
+
+        public class PixelMouseEventArgs : EventArgs
+        {
+            // 公開プロパティ
+
+            public int X
+            {
+                get;
+                set;
+            }
+
+            public int Y
+            {
+                get;
+                set;
+            }
+
+            public Brush PixelBrush
+            {
+                get;
+                set;
             }
         }
     }

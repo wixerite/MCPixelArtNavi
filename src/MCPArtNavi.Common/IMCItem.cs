@@ -11,6 +11,11 @@ namespace MCPArtNavi.Common
             get;
         }
 
+        string ItemName
+        {
+            get;
+        }
+
         string ItemColor
         {
             get;
