@@ -16,6 +16,7 @@ using Prism.Mvvm;
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
+using MCPArtNavi.Importer;
 
 namespace MCPArtNavi.UserApp
 {
@@ -95,6 +96,11 @@ namespace MCPArtNavi.UserApp
         public DelegateCommand OpenCommand
         {
             get => new DelegateCommand(async () => await this._open_commandAsync());
+        }
+
+        public DelegateCommand ImportCommand
+        {
+            get => new DelegateCommand(this._import_command);
         }
 
         public DelegateCommand ExportCommand
@@ -200,6 +206,28 @@ namespace MCPArtNavi.UserApp
                 using (var fs = File.OpenWrite(saveFileDialog.FileName))
                 {
                     PixelArtFile.SaveTo(fs, doc);
+                }
+            }
+        }
+
+        private void _import_command()
+        {
+            var openFileDialog = new OpenFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Filter = "Image File (*.png;*.bmp)|*.png;*.bmp|All Files (*.*)|*.*"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                using (var fs = File.OpenRead(openFileDialog.FileName))
+                {
+                    var importer = new ImageImporter();
+                    importer.SetTargetSize(PixelArtSize.Size128x128);
+
+                    var doc = Task.Run(async () => await importer.ImportAsync(fs, "Imported Art")).Result;
+
+                    this.CanvasViewModel.LoadPixelArt(doc);
                 }
             }
         }

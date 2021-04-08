@@ -23,7 +23,7 @@
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
                 <Separator/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Exit}"/>

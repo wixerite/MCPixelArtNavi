@@ -25,6 +25,8 @@ namespace MCPArtNavi.Common.Items
                 new MCSand(),
                 new MCBlackWool(),
                 new MCWhiteWool(),
+                new MCGreenWool(),
+                new MCLimeWool(),
             };
         }
 

@@ -131,6 +131,10 @@
       <Project>{164316cb-b20d-4ce0-94a7-fdb51df63d68}</Project>
       <Name>MCPArtNavi.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MCPArtNavi.Importer\MCPArtNavi.Importer.csproj">
+      <Project>{46343ebe-e580-490d-8041-54574f45299d}</Project>
+      <Name>MCPArtNavi.Importer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="appicon.ico" />
