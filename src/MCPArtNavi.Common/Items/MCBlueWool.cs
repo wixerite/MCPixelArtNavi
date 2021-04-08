@@ -4,18 +4,18 @@ using System.Text;
 
 namespace MCPArtNavi.Common.Items
 {
-    public class MCLimeWool : MCItemBase
+    public class MCBlueWool : MCItemBase
     {
         // 公開プロパティ
 
         public override string ItemId
         {
-            get => "lime_wool";
+            get => "blue_wool";
         }
 
         public override string ItemColor
         {
-            get => "#71B914";
+            get => "#1D489B";
         }
     }
 }

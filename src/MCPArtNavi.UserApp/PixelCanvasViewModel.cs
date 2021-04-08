@@ -86,7 +86,7 @@ namespace MCPArtNavi.UserApp
 
         private void _mapHandler_CanvasMouseDown(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(this._palette.GetByBrush(e.PixelBrush).MCItem.ItemName);
+            System.Diagnostics.Debug.WriteLine(e.PixelBrush.ToString() + "=>" + this._palette.GetByBrush(e.PixelBrush).MCItem.ItemName);
         }
 
 

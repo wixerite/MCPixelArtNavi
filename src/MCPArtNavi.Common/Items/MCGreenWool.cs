@@ -15,7 +15,7 @@ namespace MCPArtNavi.Common.Items
 
         public override string ItemColor
         {
-            get => "#5e820c";
+            get => "#5E820C";
         }
     }
 }

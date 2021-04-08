@@ -303,10 +303,13 @@ namespace MCPArtNavi.UserApp
             {
                 for (var j = 0; j < this._pixRectangels[i].Length; j++)
                 {
-                    var pixRect = this._pixRectangels[i][j].Rect;
+                    var pixRect = this._pixRectangels[j][i].Rect;
                     if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
                         pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
                         continue;
+
+                    var brush = this._pixRectangels[j][i].Brush;
+                    System.Diagnostics.Debug.WriteLine("X={0}, Y={1}, Brush={2}", j, i, brush);
 
                     this._pixelMouseDown?.Invoke(this, new PixelMouseEventArgs()
                     {
@@ -325,7 +328,7 @@ namespace MCPArtNavi.UserApp
             {
                 for (var j = 0; j < this._pixRectangels[i].Length; j++)
                 {
-                    var pixRect = this._pixRectangels[i][j].Rect;
+                    var pixRect = this._pixRectangels[j][i].Rect;
                     if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
                         pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
                         continue;

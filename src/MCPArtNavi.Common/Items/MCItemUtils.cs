@@ -23,10 +23,13 @@ namespace MCPArtNavi.Common.Items
             EnabledItems = new List<IMCItem>()
             {
                 new MCSand(),
-                new MCBlackWool(),
                 new MCWhiteWool(),
-                new MCGreenWool(),
+                new MCLightBlueWool(),
                 new MCLimeWool(),
+                new MCBlueWool(),
+                new MCGreenWool(),
+                new MCRedWool(),
+                new MCBlackWool(),
             };
         }
 

@@ -214,7 +214,7 @@ namespace MCPArtNavi.Common.Properties {
         }
         
         /// <summary>
-        ///   Yello Wool に類似しているローカライズされた文字列を検索します。
+        ///   Yellow Wool に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ItemName_yellow_wool {
             get {
