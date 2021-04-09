@@ -120,6 +120,9 @@
   <data name="MainWindow_TopMenu_File" xml:space="preserve">
     <value>File(_F)</value>
   </data>
+  <data name="MainWindow_TopMenu_File_DocumentProperty" xml:space="preserve">
+    <value>Document property(_R)...</value>
+  </data>
   <data name="MainWindow_TopMenu_File_Exit" xml:space="preserve">
     <value>Exit(_X)</value>
   </data>
@@ -158,5 +161,8 @@
   </data>
   <data name="MainWindow_TopMenu_View_ShowGrid" xml:space="preserve">
     <value>Show grid(_G)</value>
+  </data>
+  <data name="MainWindow_TopMenu_View_ShowToolPanel" xml:space="preserve">
+    <value>Show tool panel(_T)</value>
   </data>
 </root>

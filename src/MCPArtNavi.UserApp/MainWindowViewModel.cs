@@ -78,6 +78,22 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._chunkLinesVisibility, value);
         }
 
+        private bool _showToolPanelChecked;
+
+        public bool ShowToolPanelChecked
+        {
+            get => this._showToolPanelChecked;
+            set => this.SetProperty(ref this._showToolPanelChecked, value);
+        }
+        
+        private Visibility _toolPanelVisibility;
+
+        public Visibility ToolPanelVisivility
+        {
+            get => this._toolPanelVisibility;
+            set => this.SetProperty(ref this._toolPanelVisibility, value);
+        }
+
         private string _onMouseItemNameText;
         public string OnMouseItemNameText
         {
@@ -122,6 +138,7 @@ namespace MCPArtNavi.UserApp
             this.CanvasVisibility = Visibility.Visible;
             this.LoadingTextVisibility = Visibility.Collapsed;
             this.ShowChunkLinesChecked = true;
+            this.ShowToolPanelChecked = true;
 
             App.Current.MainWindow.Loaded += (sender, e) =>
             {
@@ -148,6 +165,12 @@ namespace MCPArtNavi.UserApp
                         this.ChunkLinesVisibility = Visibility.Visible;
                     else
                         this.ChunkLinesVisibility = Visibility.Hidden;
+                    break;
+                case nameof(ShowToolPanelChecked):
+                    if (this.ShowToolPanelChecked)
+                        this.ToolPanelVisivility = Visibility.Visible;
+                    else
+                        this.ToolPanelVisivility = Visibility.Collapsed;
                     break;
             }
         }
@@ -212,24 +235,12 @@ namespace MCPArtNavi.UserApp
 
         private void _import_command()
         {
-            var openFileDialog = new OpenFileDialog()
-            {
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                Filter = "Image File (*.png;*.bmp)|*.png;*.bmp|All Files (*.*)|*.*"
-            };
+            var w = new ImportWindow();
+            w.ShowDialog();
 
-            if (openFileDialog.ShowDialog() == true)
-            {
-                using (var fs = File.OpenRead(openFileDialog.FileName))
-                {
-                    var importer = new ImageImporter();
-                    importer.SetTargetSize(PixelArtSize.Size128x128);
-
-                    var doc = Task.Run(async () => await importer.ImportAsync(fs, "Imported Art")).Result;
-
-                    this.CanvasViewModel.LoadPixelArt(doc);
-                }
-            }
+            var doc = ((ImportWindowViewModel)w.DataContext).ResultDocument;
+            if (doc != null)
+                this.CanvasViewModel.LoadPixelArt(doc);
         }
 
         private void _export_command()

@@ -70,6 +70,15 @@ namespace MCPArtNavi.UserApp.Properties {
         }
         
         /// <summary>
+        ///   Document property(_R)... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainWindow_TopMenu_File_DocumentProperty {
+            get {
+                return ResourceManager.GetString("MainWindow_TopMenu_File_DocumentProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Exit(_X) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainWindow_TopMenu_File_Exit {
@@ -183,6 +192,15 @@ namespace MCPArtNavi.UserApp.Properties {
         public static string MainWindow_TopMenu_View_ShowGrid {
             get {
                 return ResourceManager.GetString("MainWindow_TopMenu_View_ShowGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Show tool panel(_T) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainWindow_TopMenu_View_ShowToolPanel {
+            get {
+                return ResourceManager.GetString("MainWindow_TopMenu_View_ShowToolPanel", resourceCulture);
             }
         }
     }

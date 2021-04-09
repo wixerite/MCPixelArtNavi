@@ -23,6 +23,8 @@
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
                 <Separator/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_DocumentProperty}"/>
+                <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>
                 <Separator/>
@@ -31,6 +33,7 @@
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View}">
                 <!-- <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowGrid}"/> -->
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowChunk}" IsCheckable="True" IsChecked="{Binding ShowChunkLinesChecked}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowToolPanel}" IsCheckable="True" IsChecked="{Binding ShowToolPanelChecked}"/>
             </MenuItem>
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help}">
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help_Website}"/>
@@ -41,19 +44,30 @@
                 <MenuItem Header="Load example image(_X)" Command="{Binding LoadExampleImageCommand}"/>
             </MenuItem>
         </Menu>
-        <ScrollViewer Grid.Row="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}" Visibility="{Binding DataContext.CanvasVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-            <local:PixelCanvas Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30" ChunkLinesLayerVisibility="{Binding DataContext.ChunkLinesVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-                <local:PixelCanvas.LayoutTransform>
-                    <ScaleTransform ScaleX="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ScaleY="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
-                </local:PixelCanvas.LayoutTransform>
-            </local:PixelCanvas>
-        </ScrollViewer>
         <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Width="100" Visibility="{Binding ToolPanelVisivility}">
+                
+            </StackPanel>
+            
+            <ScrollViewer Grid.Column="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}" Visibility="{Binding DataContext.CanvasVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <local:PixelCanvas Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30" ChunkLinesLayerVisibility="{Binding DataContext.ChunkLinesVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                    <local:PixelCanvas.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ScaleY="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                    </local:PixelCanvas.LayoutTransform>
+                </local:PixelCanvas>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="1" Margin="2">
             <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White" Visibility="{Binding LoadingTextVisibility}">
                 Loading ...
             </TextBlock>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
