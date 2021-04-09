@@ -61,6 +61,15 @@ namespace MCPArtNavi.UserApp.Properties {
         }
         
         /// <summary>
+        ///   MC Pixel Art Navi に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ApplicationTitle {
+            get {
+                return ResourceManager.GetString("ApplicationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File(_F) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainWindow_TopMenu_File {

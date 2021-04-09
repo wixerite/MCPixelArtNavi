@@ -7,7 +7,7 @@
         xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
         mc:Ignorable="d"
         xmlns:rlscview="clr-namespace:MCPArtNavi.UserApp.PixelCanvasRulers"
-        Title="MCPixel Art Navi" Height="640" Width="860" MinWidth="200" MinHeight="200" WindowStartupLocation="CenterScreen">
+        Title="{Binding WindowTitle}" Height="640" Width="860" MinWidth="200" MinHeight="200" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
@@ -41,9 +41,11 @@
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help_About}"/>
             </MenuItem>
+            <!--
             <MenuItem Header="Debug(_D)">
                 <MenuItem Header="Load example image(_X)" Command="{Binding LoadExampleImageCommand}"/>
             </MenuItem>
+            -->
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

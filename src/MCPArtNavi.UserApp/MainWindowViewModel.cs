@@ -28,6 +28,16 @@ namespace MCPArtNavi.UserApp
 
         // 公開プロパティ
 
+        /// <summary>
+        /// 現在編集中のファイルのパスを取得または設定します。
+        /// 未保存のファイルの場合、null を示します。
+        /// </summary>
+        public string DocumentFilePath
+        {
+            get;
+            private set;
+        }
+
 
         // バインディング プロパティ
 
@@ -116,6 +126,27 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._selectedToolMCItem, value);
         }
 
+        private PixelArtDocumentMetadata _currentDocumentMetadata;
+        public PixelArtDocumentMetadata CurrentDocumentMetadata
+        {
+            get => this._currentDocumentMetadata;
+            set => this.SetProperty(ref this._currentDocumentMetadata, value);
+        }
+
+        private string _windowTitle;
+        public string WindowTitle
+        {
+            get => this._windowTitle;
+            set => this.SetProperty(ref this._windowTitle, value);
+        }
+
+        private bool _documentChanged;
+        public bool DocumentChanged
+        {
+            get => this._documentChanged;
+            set => this.SetProperty(ref this._documentChanged, value);
+        }
+
 
         // コマンド
 
@@ -139,17 +170,16 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._export_command);
         }
 
-        public DelegateCommand LoadExampleImageCommand
-        {
-            get => new DelegateCommand(this._debug_loadExampleArt);
-        }
+        //public DelegateCommand LoadExampleImageCommand
+        //{
+        //    get => new DelegateCommand(this._debug_loadExampleArt);
+        //}
 
 
         // コンストラクタ
 
         public MainWindowViewModel()
         {
-
             this.CanvasVisibility = Visibility.Visible;
             this.LoadingTextVisibility = Visibility.Collapsed;
             this.ShowChunkLinesChecked = true;
@@ -163,6 +193,12 @@ namespace MCPArtNavi.UserApp
                 App.Current.MainWindow.Loaded += (sender, e) =>
                 {
                     this.CanvasViewModel.LoadPixelArt(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()));
+                    this.CurrentDocumentMetadata = new PixelArtDocumentMetadata()
+                    {
+                        DocumentTitle = "Untitled",
+                        DocumentAuthor = "",
+                        DocumentDescription = "",
+                    };
                 };
             }
 
@@ -225,6 +261,25 @@ namespace MCPArtNavi.UserApp
                         return;
                     this.BottomHintText = $"Selected '{this.SelectedToolMCItem.Item.ItemName}'.";
                     break;
+                case nameof(CurrentDocumentMetadata):
+                case nameof(DocumentChanged):
+                    if (this.CurrentDocumentMetadata == null)
+                    {
+                        this.WindowTitle = Properties.Resources.ApplicationTitle;
+                        return;
+                    }
+
+                    var text = this.CurrentDocumentMetadata.DocumentTitle;
+                    if (String.IsNullOrEmpty(text) && !String.IsNullOrEmpty(this.DocumentFilePath))
+                        text = Path.GetFileName(this.DocumentFilePath);
+
+                    if (this._documentChanged)
+                        text += " (*)";
+
+                    text += " - " + Properties.Resources.ApplicationTitle;
+
+                    this.WindowTitle = text;
+                    break;
             }
         }
 
@@ -246,6 +301,9 @@ namespace MCPArtNavi.UserApp
                 {
                     doc = PixelArtFile.LoadFrom(fs);
                 }
+
+                this.DocumentFilePath = openFileDialog.FileName;
+                this.CurrentDocumentMetadata = doc;
 
                 await Task.Run(() =>
                 {
@@ -272,10 +330,16 @@ namespace MCPArtNavi.UserApp
             if (saveFileDialog.ShowDialog() == true)
             {
                 var doc = this.CanvasViewModel.GetPixelArt();
+                doc.DocumentTitle = this.CurrentDocumentMetadata.DocumentTitle;
+                doc.DocumentAuthor = this.CurrentDocumentMetadata.DocumentAuthor;
+                doc.DocumentDescription = this.CurrentDocumentMetadata.DocumentDescription;
+
                 using (var fs = File.OpenWrite(saveFileDialog.FileName))
                 {
                     PixelArtFile.SaveTo(fs, doc);
                 }
+
+                this.DocumentChanged = false;
             }
         }
 
@@ -286,7 +350,17 @@ namespace MCPArtNavi.UserApp
 
             var doc = ((ImportWindowViewModel)w.DataContext).ResultDocument;
             if (doc != null)
+            {
                 this.CanvasViewModel.LoadPixelArt(doc);
+
+                this.DocumentChanged = true;
+                this.CurrentDocumentMetadata = new PixelArtDocumentMetadata()
+                {
+                    DocumentTitle = "Imported document",
+                    DocumentAuthor = "",
+                    DocumentDescription = "",
+                };
+            }
         }
 
         private void _export_command()
@@ -309,30 +383,30 @@ namespace MCPArtNavi.UserApp
             }
         }
 
-        private void _debug_loadExampleArt()
-        {
-            // Example
-            this.CanvasVisibility = Visibility.Hidden;
-            this.LoadingTextVisibility = Visibility.Visible;
+        //private void _debug_loadExampleArt()
+        //{
+        //    // Example
+        //    this.CanvasVisibility = Visibility.Hidden;
+        //    this.LoadingTextVisibility = Visibility.Visible;
 
-            var white_wool = new Common.Items.MCWhiteWool();
-            var black_wool = new Common.Items.MCBlackWool();
+        //    var white_wool = new Common.Items.MCWhiteWool();
+        //    var black_wool = new Common.Items.MCBlackWool();
 
-            var pxartDoc = new PixelArtDocument();
-            pxartDoc.Size = PixelArtSize.Size128x128;
-            pxartDoc.Pixels = new IMCItem[pxartDoc.Size.GetWidth() * pxartDoc.Size.GetHeight()];
-            for (var i = 0; i < pxartDoc.Pixels.Length; i++)
-            {
-                if (i % 3 == 0)
-                    pxartDoc.Pixels[i] = white_wool;
-                else
-                    pxartDoc.Pixels[i] = black_wool;
-            }
+        //    var pxartDoc = new PixelArtDocument();
+        //    pxartDoc.Size = PixelArtSize.Size128x128;
+        //    pxartDoc.Pixels = new IMCItem[pxartDoc.Size.GetWidth() * pxartDoc.Size.GetHeight()];
+        //    for (var i = 0; i < pxartDoc.Pixels.Length; i++)
+        //    {
+        //        if (i % 3 == 0)
+        //            pxartDoc.Pixels[i] = white_wool;
+        //        else
+        //            pxartDoc.Pixels[i] = black_wool;
+        //    }
 
-            this.CanvasViewModel.LoadPixelArt(pxartDoc);
+        //    this.CanvasViewModel.LoadPixelArt(pxartDoc);
 
-            this.CanvasVisibility = Visibility.Visible;
-            this.LoadingTextVisibility = Visibility.Collapsed;
-        }
+        //    this.CanvasVisibility = Visibility.Visible;
+        //    this.LoadingTextVisibility = Visibility.Collapsed;
+        //}
     }
 }
