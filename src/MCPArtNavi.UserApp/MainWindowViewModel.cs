@@ -175,11 +175,6 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._editDocumentProperty_command);
         }
 
-        //public DelegateCommand LoadExampleImageCommand
-        //{
-        //    get => new DelegateCommand(this._debug_loadExampleArt);
-        //}
-
 
         // コンストラクタ
 
@@ -399,31 +394,5 @@ namespace MCPArtNavi.UserApp
                 this.CurrentDocumentMetadata = d.OutputDocumentMetadata;
             }
         }
-
-        //private void _debug_loadExampleArt()
-        //{
-        //    // Example
-        //    this.CanvasVisibility = Visibility.Hidden;
-        //    this.LoadingTextVisibility = Visibility.Visible;
-
-        //    var white_wool = new Common.Items.MCWhiteWool();
-        //    var black_wool = new Common.Items.MCBlackWool();
-
-        //    var pxartDoc = new PixelArtDocument();
-        //    pxartDoc.Size = PixelArtSize.Size128x128;
-        //    pxartDoc.Pixels = new IMCItem[pxartDoc.Size.GetWidth() * pxartDoc.Size.GetHeight()];
-        //    for (var i = 0; i < pxartDoc.Pixels.Length; i++)
-        //    {
-        //        if (i % 3 == 0)
-        //            pxartDoc.Pixels[i] = white_wool;
-        //        else
-        //            pxartDoc.Pixels[i] = black_wool;
-        //    }
-
-        //    this.CanvasViewModel.LoadPixelArt(pxartDoc);
-
-        //    this.CanvasVisibility = Visibility.Visible;
-        //    this.LoadingTextVisibility = Visibility.Collapsed;
-        //}
     }
 }

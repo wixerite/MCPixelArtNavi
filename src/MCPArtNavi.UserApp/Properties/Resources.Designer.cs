@@ -70,6 +70,78 @@ namespace MCPArtNavi.UserApp.Properties {
         }
         
         /// <summary>
+        ///   Cancel(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Button_Cancel {
+            get {
+                return ResourceManager.GetString("ImportWindow_Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import(_I) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Button_Import {
+            get {
+                return ResourceManager.GetString("ImportWindow_Button_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Reference(_R)... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Button_Reference {
+            get {
+                return ResourceManager.GetString("ImportWindow_Button_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Enabled items: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Label_EnabledItems {
+            get {
+                return ResourceManager.GetString("ImportWindow_Label_EnabledItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Pixel Conversion uses Game Items that have been checked. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Label_EnabledItemsHint {
+            get {
+                return ResourceManager.GetString("ImportWindow_Label_EnabledItemsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import from: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Label_ImportFrom {
+            get {
+                return ResourceManager.GetString("ImportWindow_Label_ImportFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import size: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Label_ImportSize {
+            get {
+                return ResourceManager.GetString("ImportWindow_Label_ImportSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string ImportWindow_Title {
+            get {
+                return ResourceManager.GetString("ImportWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File(_F) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainWindow_TopMenu_File {
