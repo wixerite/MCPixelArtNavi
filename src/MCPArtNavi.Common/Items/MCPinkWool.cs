@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MCPArtNavi.Common.Items
 {
-    public class MCPinkWool : MCItemBase
+    public class MCPinkWool : MCWoolTypeBase
     {
         // 公開プロパティ
 

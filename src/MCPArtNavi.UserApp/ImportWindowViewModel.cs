@@ -99,7 +99,8 @@ namespace MCPArtNavi.UserApp
         public ImportWindowViewModel()
         {
             this.MCItems = new ObservableCollection<ImporterMCItem>(
-                MCItemUtils.EnabledItems.Select(e => new ImporterMCItem() { Item = e, Use = true }));
+                MCItemUtils.EnabledItems
+                    .Select(e => new ImporterMCItem() { Item = e, Use = e is MCWoolTypeBase }));
 
             this.ArtSizes = Enum.GetValues(typeof(PixelArtSize)).Cast<PixelArtSize>().Select(e => new PixelArtSizeItem(e)).ToArray();
             this.ResultDocument = null;

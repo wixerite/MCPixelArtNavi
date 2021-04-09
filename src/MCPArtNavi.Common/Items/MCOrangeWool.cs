@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MCPArtNavi.Common.Items
 {
-    public class MCOrangeWool : MCItemBase
+    public class MCOrangeWool : MCWoolTypeBase
     {
         // 公開プロパティ
 
