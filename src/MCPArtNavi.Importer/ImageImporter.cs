@@ -92,50 +92,6 @@ namespace MCPArtNavi.Importer
                             }
                         }
                     }
-
-                    //Image image = null;
-                    //Bitmap bitmap = null;
-                    //try
-                    //{
-                    //    image = Image.FromStream(stream);
-                    //    bitmap = new Bitmap(image);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    throw new Exception("File is not a valid image.", ex);
-                    //}
-                    //finally
-                    //{
-                    //    image?.Dispose();
-                    //    bitmap?.Dispose();
-                    //}
-
-                    //try
-                    //{
-                    //    var mapToImageMagnWidth = (double)bitmap.Width / targetWidth;
-                    //    var mapToImageMagnHeight = (double)bitmap.Height / targetHeight;
-
-                    //    var p = 0;
-                    //    for (var i = 0; i < targetHeight; i++)
-                    //    {
-                    //        for (var j = 0; j < targetWidth; j++, p++)
-                    //        {
-                    //            var color = bitmap.GetPixel(
-                    //                Math.Min((int)(j * mapToImageMagnWidth), bitmap.Width),
-                    //                Math.Min((int)(i * mapToImageMagnHeight), bitmap.Height));
-                    //            pixels[p] = this._getNearlyColorItem(color);
-                    //        }
-                    //    }
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    throw new Exception("Failure to convert image pixel to map pixel.", ex);
-                    //}
-                    //finally
-                    //{
-                    //    image?.Dispose();
-                    //    bitmap?.Dispose();
-                    //}
                 });
             }
             catch(Exception ex)
