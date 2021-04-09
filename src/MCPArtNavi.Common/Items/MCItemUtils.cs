@@ -23,10 +23,21 @@ namespace MCPArtNavi.Common.Items
             EnabledItems = new List<IMCItem>()
             {
                 new MCSand(),
+
+                // 羊毛
                 new MCWhiteWool(),
+                new MCOrangeWool(),
+                new MCMagentaWool(),
                 new MCLightBlueWool(),
+                new MCYellowWool(),
                 new MCLimeWool(),
+                new MCPinkWool(),
+                new MCGrayWool(),
+                new MCLightGrayWool(),
+                new MCCyanWool(),
+                new MCPurpleWool(),
                 new MCBlueWool(),
+                new MCBrownWool(),
                 new MCGreenWool(),
                 new MCRedWool(),
                 new MCBlackWool(),
