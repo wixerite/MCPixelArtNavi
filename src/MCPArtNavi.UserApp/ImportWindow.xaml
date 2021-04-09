@@ -68,8 +68,8 @@
                 </Style>
             </StackPanel.Resources>
 
-            <Button Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">Cancel(_C)</Button>
-            <Button Command="{Binding ImportCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">Import(_I)</Button>
+            <Button Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="Cancel(_C)"/>
+            <Button Command="{Binding ImportCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="Import(_I)"/>
         </StackPanel>
     </Grid>
 </Window>

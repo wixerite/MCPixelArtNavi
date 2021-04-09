@@ -68,29 +68,80 @@ namespace MCPArtNavi.Importer
             var targetHeight = this._targetSize.GetHeight();
             var pixels = new IMCItem[targetWidth * targetHeight];
 
-            await Task.Run(() =>
+            try
             {
-                // 非同期セクション
-
-                using (var image = Image.FromStream(stream))
-                using (var bitmap = new Bitmap(image))
+                await Task.Run(async () =>
                 {
-                    var mapToImageMagnWidth = (double)bitmap.Width / targetWidth;
-                    var mapToImageMagnHeight = (double)bitmap.Height / targetHeight;
+                    // 非同期セクション
 
-                    var p = 0;
-                    for (var i = 0; i < targetHeight; i++)
+                    using (var image = Image.FromStream(stream))
+                    using (var bitmap = new Bitmap(image))
                     {
-                        for (var j = 0; j < targetWidth; j++, p++)
+                        var mapToImageMagnWidth = (double)bitmap.Width / targetWidth;
+                        var mapToImageMagnHeight = (double)bitmap.Height / targetHeight;
+
+                        var p = 0;
+                        for (var i = 0; i < targetHeight; i++)
                         {
-                            var color = bitmap.GetPixel(
-                                Math.Min((int)(j * mapToImageMagnWidth), bitmap.Width),
-                                Math.Min((int)(i * mapToImageMagnHeight), bitmap.Height));
-                            pixels[p] = this._getNearlyColorItem(color);
+                            for (var j = 0; j < targetWidth; j++, p++)
+                            {
+                                var color = bitmap.GetPixel(
+                                    Math.Min((int)(j * mapToImageMagnWidth), bitmap.Width),
+                                    Math.Min((int)(i * mapToImageMagnHeight), bitmap.Height));
+                                pixels[p] = this._getNearlyColorItem(color);
+                            }
                         }
                     }
-                }
-            });
+
+                    //Image image = null;
+                    //Bitmap bitmap = null;
+                    //try
+                    //{
+                    //    image = Image.FromStream(stream);
+                    //    bitmap = new Bitmap(image);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    throw new Exception("File is not a valid image.", ex);
+                    //}
+                    //finally
+                    //{
+                    //    image?.Dispose();
+                    //    bitmap?.Dispose();
+                    //}
+
+                    //try
+                    //{
+                    //    var mapToImageMagnWidth = (double)bitmap.Width / targetWidth;
+                    //    var mapToImageMagnHeight = (double)bitmap.Height / targetHeight;
+
+                    //    var p = 0;
+                    //    for (var i = 0; i < targetHeight; i++)
+                    //    {
+                    //        for (var j = 0; j < targetWidth; j++, p++)
+                    //        {
+                    //            var color = bitmap.GetPixel(
+                    //                Math.Min((int)(j * mapToImageMagnWidth), bitmap.Width),
+                    //                Math.Min((int)(i * mapToImageMagnHeight), bitmap.Height));
+                    //            pixels[p] = this._getNearlyColorItem(color);
+                    //        }
+                    //    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    throw new Exception("Failure to convert image pixel to map pixel.", ex);
+                    //}
+                    //finally
+                    //{
+                    //    image?.Dispose();
+                    //    bitmap?.Dispose();
+                    //}
+                });
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
 
             return new PixelArtDocument()
             {

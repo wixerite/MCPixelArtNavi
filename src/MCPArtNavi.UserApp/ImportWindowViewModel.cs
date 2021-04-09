@@ -66,6 +66,14 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._importFilePath, value);
         }
 
+        private string _cannotImportReason;
+
+        public string CannotImportReason
+        {
+            get => this._cannotImportReason;
+            set => this.SetProperty(ref this._cannotImportReason, value);
+        }
+
 
         // コマンド
 
@@ -94,16 +102,6 @@ namespace MCPArtNavi.UserApp
                 MCItemUtils.EnabledItems.Select(e => new ImporterMCItem() { Item = e, Use = true }));
 
             this.ArtSizes = Enum.GetValues(typeof(PixelArtSize)).Cast<PixelArtSize>().Select(e => new PixelArtSizeItem(e)).ToArray();
-
-            //this.DragEventHandler = (sender, e) =>
-            //{
-            //    var dropFiles = e.Data.GetData(DataFormats.FileDrop) as string[];
-            //    if (dropFiles == null || dropFiles.Length == 0)
-            //        return;
-
-            //    ImportFilePath = dropFiles[0];
-            //};
-
             this.ResultDocument = null;
         }
 
@@ -129,17 +127,67 @@ namespace MCPArtNavi.UserApp
 
         private void _import_command(Object e)
         {
-            using (var fs = File.OpenRead(this.ImportFilePath))
+            if (!this._import_command_canExecute(null))
             {
-                var importer = new ImageImporter();
-                importer.SetTargetSize(this.ImportSize.Value);
-                importer.ItemPalette.Items.Clear();
-                importer.ItemPalette.Items.AddRange(this.MCItems.Where(elem => elem.Use).Select(elem => elem.Item));
+                MessageBox.Show(this.CannotImportReason);
+                return;
+            }
 
-                this.ResultDocument = Task.Run(async () => await importer.ImportAsync(fs, "Imported Art")).Result;
+            try
+            {
+                using (var fs = File.OpenRead(this.ImportFilePath))
+                {
+                    var importer = new ImageImporter();
+                    importer.SetTargetSize(this.ImportSize.Value);
+                    importer.ItemPalette.Items.Clear();
+                    importer.ItemPalette.Items.AddRange(this.MCItems.Where(elem => elem.Use).Select(elem => elem.Item));
+
+                    Exception ex = null;
+
+                    var doc = Task.Run(async () => await importer.ImportAsync(fs, "Imported Art").ContinueWith(r =>
+                    {
+                        ex = r.Exception;
+                        if (ex is AggregateException)
+                            ex = ((AggregateException)ex).InnerException;
+
+                        if (ex == null)
+                            return r.Result;
+                        else
+                            return null;
+                    })).Result;
+
+                    if (ex != null)
+                        throw ex;
+
+                    this.ResultDocument = doc;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failure to import image;\n{ex.GetType().Name}: {ex.Message}");
+                return;
             }
 
             this._closeWindow(e);
+        }
+
+        private bool _import_command_canExecute(Object e)
+        {
+            if (this.MCItems.Where(elem => elem.Use).Count() < 2)
+            {
+                this.CannotImportReason = "You must select 2 or more wool or other items on checking list.";
+                return false;
+            }
+
+            if (String.IsNullOrEmpty(this.ImportFilePath) || !File.Exists(this.ImportFilePath))
+            {
+                this.CannotImportReason = "You must select exist image file.";
+                return false;
+            }
+
+            this.CannotImportReason = "";
+
+            return true;
         }
 
         private void _closeWindow(Object e)
