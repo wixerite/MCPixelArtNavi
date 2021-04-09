@@ -167,8 +167,25 @@ namespace MCPArtNavi.UserApp
             }
 
             this.CanvasViewModel = new PixelCanvasViewModel();
-            this.CanvasViewModel.ItemMouseMove += (sender, e) => this.BottomHintText = $"{e.X.ToString()}, {e.Y.ToString()} / {e.Item.ItemName}";
+            this.CanvasViewModel.ItemMouseMove += _canvasViewModel_ItemMouseMove;
             this.CanvasZoom = 5.0d;
+        }
+
+        private void _canvasViewModel_ItemMouseMove(object sender, PixelCanvasViewModel.ItemMouseEventArgs e)
+        {
+            int nonProgrammersX = e.X + 1;
+            int nonProgrammersY = e.Y + 1;
+
+            int nonProgrammersXinChunk = e.X % 16 + 1;
+            int nonProgrammersYinChunk = e.Y % 16 + 1;
+
+            int nonProgrammersChunkX = e.X / 16 + 1;
+            int nonProgrammersChunkY = e.Y / 16 + 1;
+
+            this.BottomHintText =
+                $"Global: {nonProgrammersX.ToString()}, {nonProgrammersY.ToString()} / " +
+                $"In chunk: {nonProgrammersXinChunk.ToString()}, {nonProgrammersYinChunk.ToString()} / " +
+                $"Chunks: {nonProgrammersChunkX}, {nonProgrammersChunkY} / Item: {e.Item.ItemName}";
         }
 
 

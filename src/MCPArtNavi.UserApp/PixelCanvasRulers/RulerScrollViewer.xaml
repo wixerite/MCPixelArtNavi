@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="MCPArtNavi.UserApp.PixelCanvasRulers.RulerScrollViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MCPArtNavi.UserApp.PixelCanvasRulers"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="_this">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Background="White"/>
+
+        <ScrollViewer x:Name="mainScrollViewer" Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+            <ContentPresenter x:Name="contentPresenter" Content="{Binding InnerContent, ElementName=_this}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10">
+                <ContentPresenter.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ContentScale, ElementName=_this}" ScaleY="{Binding ContentScale, ElementName=_this}"/>
+                </ContentPresenter.LayoutTransform>
+            </ContentPresenter>
+        </ScrollViewer>
+        <ScrollViewer x:Name="horizontalRulerScrollViewer" Grid.Row="0" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" Background="White">
+            <local:HorizontalRuler Width="{Binding Content.Width, ElementName=contentPresenter}" Height="20" Margin="10, 0" HorizontalAlignment="Left">
+                <local:HorizontalRuler.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ContentScale, ElementName=_this}"/>
+                </local:HorizontalRuler.LayoutTransform>
+            </local:HorizontalRuler>
+        </ScrollViewer>
+        <ScrollViewer x:Name="verticalRulerScrollViewer" Grid.Row="1" Grid.Column="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Background="White">
+            <local:VerticalRuler Width="20" Height="{Binding Content.Height, ElementName=contentPresenter}" Margin="0, 10" VerticalAlignment="Top">
+                <local:VerticalRuler.LayoutTransform>
+                    <ScaleTransform ScaleY="{Binding ContentScale, ElementName=_this}"/>
+                </local:VerticalRuler.LayoutTransform>
+            </local:VerticalRuler>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

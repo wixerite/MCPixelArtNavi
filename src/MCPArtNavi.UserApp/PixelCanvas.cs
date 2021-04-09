@@ -44,6 +44,7 @@ namespace MCPArtNavi.UserApp
         private SolidColorBrush _defaultChunkLineColorBrush;
 
         private EventHandler<PixelMouseEventArgs> _pixelMouseDown;
+        private EventHandler<PixelMouseEventArgs> _pixelMouseUp;
         private EventHandler<PixelMouseEventArgs> _pixelMouseMove;
 
 
@@ -53,6 +54,12 @@ namespace MCPArtNavi.UserApp
         {
             add => this._pixelMouseDown += value;
             remove => this._pixelMouseDown -= value;
+        }
+
+        public event EventHandler<PixelMouseEventArgs> PixelMouseUp
+        {
+            add => this._pixelMouseUp += value;
+            remove => this._pixelMouseUp -= value;
         }
 
         public event EventHandler<PixelMouseEventArgs> PixelMouseMove
@@ -165,6 +172,7 @@ namespace MCPArtNavi.UserApp
             this._canvasLayoutUpdating();
 
             this.MouseDown += this._mouseDown;
+            this.MouseUp += this._mouseUp;
             this.MouseMove += this._mouseMove;
         }
 
@@ -296,7 +304,7 @@ namespace MCPArtNavi.UserApp
             this.Dispatcher.Invoke(e.Action);
         }
 
-        private void _mouseDown(Object sender, MouseButtonEventArgs e)
+        private PixelMouseEventArgs _getMouseData(MouseEventArgs e)
         {
             var point = e.GetPosition(this);
             for (var i = 0; i < this._pixRectangels.Length; i++)
@@ -308,43 +316,50 @@ namespace MCPArtNavi.UserApp
                         pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
                         continue;
 
-                    var brush = this._pixRectangels[i][j].Brush;
-                    System.Diagnostics.Debug.WriteLine("X={0}, Y={1}, Brush={2}", j, i, brush);
-
-                    this._pixelMouseDown?.Invoke(this, new PixelMouseEventArgs()
+                    return new PixelMouseEventArgs()
                     {
+                        IsPixelHit = true,
                         PixelBrush = this._pixRectangels[i][j].Brush,
                         X = j,
                         Y = i,
-                    });
-
-                    break;
+                    };
                 }
             }
+
+            return new PixelMouseEventArgs()
+            {
+                IsPixelHit = false,
+                PixelBrush = null,
+                X = -1,
+                Y = -1,
+            };
+        }
+
+        private void _mouseDown(Object sender, MouseButtonEventArgs e)
+        {
+            var param = this._getMouseData(e);
+            if (param == null)
+                return;
+
+            this._pixelMouseDown?.Invoke(this, param);
+        }
+
+        private void _mouseUp(Object sender, MouseEventArgs e)
+        {
+            var param = this._getMouseData(e);
+            if (param == null)
+                return;
+
+            this._pixelMouseUp?.Invoke(this, param);
         }
 
         private void _mouseMove(Object sender, MouseEventArgs e)
         {
-            var point = e.GetPosition(this);
-            for (var i = 0; i < this._pixRectangels.Length; i++)
-            {
-                for (var j = 0; j < this._pixRectangels[i].Length; j++)
-                {
-                    var pixRect = this._pixRectangels[i][j].Rect;
-                    if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
-                        pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
-                        continue;
+            var param = this._getMouseData(e);
+            if (param == null)
+                return;
 
-                    this._pixelMouseMove?.Invoke(this, new PixelMouseEventArgs()
-                    {
-                        PixelBrush = this._pixRectangels[i][j].Brush,
-                        X = j,
-                        Y = i,
-                    });
-
-                    break;
-                }
-            }
+            this._pixelMouseMove?.Invoke(this, param);
         }
 
 
@@ -352,7 +367,6 @@ namespace MCPArtNavi.UserApp
 
         private void _chunkLinesLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
-            // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
             for (var i = 0; i < this._chunksVerticalLines.Length; i++)
             {
@@ -369,7 +383,6 @@ namespace MCPArtNavi.UserApp
 
         private void _pixelMapLayer_Rendering(object sender, HandleableElement.HandleableElementRenderingEventArgs e)
         {
-            // Dispatcher 経由で改善なし
             var fe = (FrameworkElement)sender;
             for (var i = 0; i < this._pixelWidth; i++)
             {
@@ -387,6 +400,12 @@ namespace MCPArtNavi.UserApp
         public class PixelMouseEventArgs : EventArgs
         {
             // 公開プロパティ
+
+            public bool IsPixelHit
+            {
+                get;
+                set;
+            }
 
             public int X
             {

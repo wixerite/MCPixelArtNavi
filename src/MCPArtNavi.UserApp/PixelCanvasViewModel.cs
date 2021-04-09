@@ -22,6 +22,8 @@ namespace MCPArtNavi.UserApp
         private EventHandler<ItemMouseEventArgs> _itemMouseMove;
         private EventHandler<ItemMouseEventArgs> _itemMouseDown;
 
+        private bool _isDrag;
+
 
         // 公開プロパティ
 
@@ -89,6 +91,7 @@ namespace MCPArtNavi.UserApp
             this.MapHandler = new PixelCanvasMapHandler();
             this.MapHandler.CanvasMouseMove += this._mapHandler_CanvasMouseMove;
             this.MapHandler.CanvasMouseDown += this._mapHandler_CanvasMouseDown;
+            this.MapHandler.CanvasMouseUp += this._mapHandler_CanvasMouseUp;
         }
 
 
@@ -96,7 +99,31 @@ namespace MCPArtNavi.UserApp
 
         private void _mapHandler_CanvasMouseMove(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
         {
+            if (!e.IsPixelHit)
+                return;
+
             this._itemMouseMove?.Invoke(this, new ItemMouseEventArgs()
+            {
+                Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
+                X = e.X,
+                Y = e.Y,
+            });
+
+            if (this._isDrag == false || this.PenItem == null)
+                return;
+            this.MapHandler.SetPixel(e.X, e.Y, this._palette.GetByMCItem(this.PenItem).Brush);
+            //if (Environment.TickCount % 50 == 0)
+                this.MapHandler.RedrawLayout();
+        }
+
+        private void _mapHandler_CanvasMouseDown(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
+        {
+            this._isDrag = true;
+
+            if (!e.IsPixelHit)
+                return;
+
+            this._itemMouseDown?.Invoke(this, new ItemMouseEventArgs()
             {
                 Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
                 X = e.X,
@@ -104,18 +131,18 @@ namespace MCPArtNavi.UserApp
             });
         }
 
-        private void _mapHandler_CanvasMouseDown(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
+        private void _mapHandler_CanvasMouseUp(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
         {
-            this._itemMouseDown?.Invoke(this, new ItemMouseEventArgs()
-            {
-                Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
-                X = e.X,
-                Y = e.Y,
-            });
+            //this._itemMouseDown?.Invoke(this, new ItemMouseEventArgs()
+            //{
+            //    Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
+            //    X = e.X,
+            //    Y = e.Y,
+            //});
 
-            if (this.PenItem == null)
+            this._isDrag = false;
+            if (this.PenItem == null || !e.IsPixelHit)
                 return;
-
             this.MapHandler.SetPixel(e.X, e.Y, this._palette.GetByMCItem(this.PenItem).Brush);
             this.MapHandler.RedrawLayout();
         }

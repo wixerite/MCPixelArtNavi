@@ -17,6 +17,7 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         private EventHandler<CanvasToBitmapEventArgs> _canvasToBitmapRequested;
         private EventHandler<InvokeDispatcherEventArgs> _invokeDispatcherRequested;
         private EventHandler<PixelMouseEventArgs> _canvasMouseDown;
+        private EventHandler<PixelMouseEventArgs> _canvasMouseUp;
         private EventHandler<PixelMouseEventArgs> _canvasMouseMove;
 
 
@@ -58,6 +59,12 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
             remove => this._canvasMouseDown -= value;
         }
 
+        public event EventHandler<PixelMouseEventArgs> CanvasMouseUp
+        {
+            add => this._canvasMouseUp += value;
+            remove => this._canvasMouseUp -= value;
+        }
+
         public event EventHandler<PixelMouseEventArgs> CanvasMouseMove
         {
             add => this._canvasMouseMove += value;
@@ -71,6 +78,18 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         {
             this._canvasMouseDown?.Invoke(this, new PixelMouseEventArgs()
             {
+                IsPixelHit = e.IsPixelHit,
+                X = e.X,
+                Y = e.Y,
+                PixelBrush = e.PixelBrush,
+            });
+        }
+
+        private void _canvas_canvasMouseUp(Object sender, PixelCanvas.PixelMouseEventArgs e)
+        {
+            this._canvasMouseUp(this, new PixelMouseEventArgs()
+            {
+                IsPixelHit = e.IsPixelHit,
                 X = e.X,
                 Y = e.Y,
                 PixelBrush = e.PixelBrush,
@@ -81,6 +100,7 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         {
             this._canvasMouseMove(this, new PixelMouseEventArgs()
             {
+                IsPixelHit = e.IsPixelHit,
                 X = e.X,
                 Y = e.Y,
                 PixelBrush = e.PixelBrush,
@@ -155,12 +175,16 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
         public void OnRegistered(PixelCanvas canvas)
         {
             canvas.PixelMouseDown += this._canvas_canvasMouseDown;
+            canvas.PixelMouseUp += this._canvas_canvasMouseUp;
+
             canvas.PixelMouseMove += this._canvas_canvasMouseMove;
         }
 
         public void OnUnregistered(PixelCanvas canvas)
         {
             canvas.PixelMouseDown -= this._canvas_canvasMouseDown;
+            canvas.PixelMouseUp -= this._canvas_canvasMouseUp;
+
             canvas.PixelMouseMove -= this._canvas_canvasMouseMove;
         }
 
