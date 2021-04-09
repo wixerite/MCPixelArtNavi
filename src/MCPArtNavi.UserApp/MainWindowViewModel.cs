@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ using Prism.Mvvm;
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
-using MCPArtNavi.Importer;
+using MCPArtNavi.UserApp.MainWindowInternal;
 
 namespace MCPArtNavi.UserApp
 {
@@ -94,11 +95,25 @@ namespace MCPArtNavi.UserApp
             set => this.SetProperty(ref this._toolPanelVisibility, value);
         }
 
-        private string _onMouseItemNameText;
-        public string OnMouseItemNameText
+        private string _bottomHintText;
+        public string BottomHintText
         {
-            get => this._onMouseItemNameText;
-            set => this.SetProperty(ref this._onMouseItemNameText, value);
+            get => this._bottomHintText;
+            set => this.SetProperty(ref this._bottomHintText, value);
+        }
+
+        private ObservableCollection<AvailableMCItem> _availableMCItems;
+        public ObservableCollection<AvailableMCItem> AvailableMCItems
+        {
+            get => this._availableMCItems;
+            set => this.SetProperty(ref this._availableMCItems, value);
+        }
+
+        private AvailableMCItem _selectedToolMCItem;
+        public AvailableMCItem SelectedToolMCItem
+        {
+            get => this._selectedToolMCItem;
+            set => this.SetProperty(ref this._selectedToolMCItem, value);
         }
 
 
@@ -138,16 +153,22 @@ namespace MCPArtNavi.UserApp
             this.CanvasVisibility = Visibility.Visible;
             this.LoadingTextVisibility = Visibility.Collapsed;
             this.ShowChunkLinesChecked = true;
-            this.ShowToolPanelChecked = true;
+            this.ShowToolPanelChecked = false;
+            this.ToolPanelVisivility = Visibility.Collapsed;
+            this.AvailableMCItems = new ObservableCollection<AvailableMCItem>(MCItemUtils.EnabledItems.Select(e => new AvailableMCItem() { Item = e }));
 
-            App.Current.MainWindow.Loaded += (sender, e) =>
+            if (App.Current != null && App.Current.MainWindow != null)
             {
-                this.CanvasViewModel.LoadPixelArt(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()));
-            };
+                // デザイナではない
+                App.Current.MainWindow.Loaded += (sender, e) =>
+                {
+                    this.CanvasViewModel.LoadPixelArt(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()));
+                };
+            }
 
             this.CanvasViewModel = new PixelCanvasViewModel();
-            this.CanvasViewModel.ItemMouseMove += (sender, e) => this.OnMouseItemNameText = e.Item.ItemName;
-            this.CanvasZoom = 4.0d;
+            this.CanvasViewModel.ItemMouseMove += (sender, e) => this.BottomHintText = $"{e.X.ToString()}, {e.Y.ToString()} / {e.Item.ItemName}";
+            this.CanvasZoom = 5.0d;
         }
 
 
@@ -168,9 +189,24 @@ namespace MCPArtNavi.UserApp
                     break;
                 case nameof(ShowToolPanelChecked):
                     if (this.ShowToolPanelChecked)
+                    {
                         this.ToolPanelVisivility = Visibility.Visible;
+                        if (this.CanvasViewModel != null)
+                            this.CanvasViewModel.PenItem = this.SelectedToolMCItem?.Item;
+                    }
                     else
+                    {
                         this.ToolPanelVisivility = Visibility.Collapsed;
+                        if (this.CanvasViewModel != null)
+                            this.CanvasViewModel.PenItem = null;
+                    }
+                    break;
+                case nameof(SelectedToolMCItem):
+                    if (this.CanvasViewModel != null)
+                        this.CanvasViewModel.PenItem = this.SelectedToolMCItem?.Item;
+                    if (this.SelectedToolMCItem == null)
+                        return;
+                    this.BottomHintText = $"Selected '{this.SelectedToolMCItem.Item.ItemName}'.";
                     break;
             }
         }
@@ -194,23 +230,16 @@ namespace MCPArtNavi.UserApp
                     doc = PixelArtFile.LoadFrom(fs);
                 }
 
-                
-                System.Diagnostics.Debug.WriteLine("Start load doc (external)");
-
                 await Task.Run(() =>
                 {
                     this.CanvasVisibility = Visibility.Hidden;
                     this.LoadingTextVisibility = Visibility.Visible;
 
-                    System.Diagnostics.Debug.WriteLine("Start load doc");
                     this.CanvasViewModel.LoadPixelArt(doc);
-                    System.Diagnostics.Debug.WriteLine("Complete load doc");
 
                     this.CanvasVisibility = Visibility.Visible;
                     this.LoadingTextVisibility = Visibility.Collapsed;
                 });
-
-                System.Diagnostics.Debug.WriteLine("Complete load doc (external)");
             }
         }
 

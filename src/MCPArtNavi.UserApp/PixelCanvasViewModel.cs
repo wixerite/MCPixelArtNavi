@@ -20,6 +20,16 @@ namespace MCPArtNavi.UserApp
         private Palette _palette;
 
         private EventHandler<ItemMouseEventArgs> _itemMouseMove;
+        private EventHandler<ItemMouseEventArgs> _itemMouseDown;
+
+
+        // 公開プロパティ
+
+        public IMCItem PenItem
+        {
+            get;
+            set;
+        }
 
 
         // 公開イベント
@@ -28,6 +38,12 @@ namespace MCPArtNavi.UserApp
         {
             add => this._itemMouseMove += value;
             remove => this._itemMouseMove -= value;
+        }
+
+        public event EventHandler<ItemMouseEventArgs> ItemMouseDown
+        {
+            add => this._itemMouseDown += value;
+            remove => this._itemMouseDown -= value;
         }
 
 
@@ -67,26 +83,41 @@ namespace MCPArtNavi.UserApp
             this.PixelArtHeight = 16;
 
             this._palette = new Palette();
+            foreach (var e in MCItemUtils.EnabledItems)
+                this._palette.Items.Add(PaletteItem.CreateFrom(e));
 
             this.MapHandler = new PixelCanvasMapHandler();
-            this.MapHandler.CanvasMouseDown += _mapHandler_CanvasMouseDown;
-            this.MapHandler.CanvasMouseMove += _mapHandler_CanvasMouseMove;
-        }
-
-        private void _mapHandler_CanvasMouseMove(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
-        {
-            this._itemMouseMove?.Invoke(this, new ItemMouseEventArgs()
-            {
-                Item = this._palette.GetByBrush(e.PixelBrush).MCItem
-            });
+            this.MapHandler.CanvasMouseMove += this._mapHandler_CanvasMouseMove;
+            this.MapHandler.CanvasMouseDown += this._mapHandler_CanvasMouseDown;
         }
 
 
         // 非公開メソッド
 
+        private void _mapHandler_CanvasMouseMove(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
+        {
+            this._itemMouseMove?.Invoke(this, new ItemMouseEventArgs()
+            {
+                Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
+                X = e.X,
+                Y = e.Y,
+            });
+        }
+
         private void _mapHandler_CanvasMouseDown(object sender, PixelCanvasMapHandler.PixelMouseEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(e.PixelBrush.ToString() + "=>" + this._palette.GetByBrush(e.PixelBrush).MCItem.ItemName);
+            this._itemMouseDown?.Invoke(this, new ItemMouseEventArgs()
+            {
+                Item = this._palette.GetByBrush(e.PixelBrush).MCItem,
+                X = e.X,
+                Y = e.Y,
+            });
+
+            if (this.PenItem == null)
+                return;
+
+            this.MapHandler.SetPixel(e.X, e.Y, this._palette.GetByMCItem(this.PenItem).Brush);
+            this.MapHandler.RedrawLayout();
         }
 
 
@@ -107,8 +138,8 @@ namespace MCPArtNavi.UserApp
                 for (var j = 0; j < this.PixelArtWidth; j++, p++)
                 {
                     var item = document.Pixels[p];
-                    if (this._palette.ContainsMCItem(item) == false)
-                        this._palette.Items.Add(PaletteItem.CreateFrom(item));
+                    //if (this._palette.ContainsMCItem(item) == false)
+                    //    this._palette.Items.Add(PaletteItem.CreateFrom(item));
 
                     this.MapHandler.SetPixel(j, i, this._palette.GetByMCItem(item).Brush);
                 }
@@ -122,7 +153,7 @@ namespace MCPArtNavi.UserApp
             var artSize = default(PixelArtSize);
             foreach (var s in Enum.GetValues(typeof(PixelArtSize)).Cast<PixelArtSize>())
             {
-                if (s.GetWidth() != this.PixelArtWidth && s.GetHeight() != this.PixelArtHeight)
+                if (s.GetWidth() != this.PixelArtWidth || s.GetHeight() != this.PixelArtHeight)
                     continue;
 
                 artSize = s;
@@ -144,7 +175,9 @@ namespace MCPArtNavi.UserApp
             }
 
             var document = new PixelArtDocument();
-            document.DocumentTitle = "Untitled Map";
+            document.DocumentTitle = "";
+            document.DocumentAuthor = "";
+            document.DocumentDescription = "";
             document.Size = artSize;
             document.Pixels = pixels;
             
@@ -162,6 +195,18 @@ namespace MCPArtNavi.UserApp
         public class ItemMouseEventArgs
         {
             public IMCItem Item
+            {
+                get;
+                set;
+            }
+
+            public int X
+            {
+                get;
+                set;
+            }
+
+            public int Y
             {
                 get;
                 set;

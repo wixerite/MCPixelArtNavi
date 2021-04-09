@@ -303,20 +303,22 @@ namespace MCPArtNavi.UserApp
             {
                 for (var j = 0; j < this._pixRectangels[i].Length; j++)
                 {
-                    var pixRect = this._pixRectangels[j][i].Rect;
+                    var pixRect = this._pixRectangels[i][j].Rect;
                     if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
                         pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
                         continue;
 
-                    var brush = this._pixRectangels[j][i].Brush;
+                    var brush = this._pixRectangels[i][j].Brush;
                     System.Diagnostics.Debug.WriteLine("X={0}, Y={1}, Brush={2}", j, i, brush);
 
                     this._pixelMouseDown?.Invoke(this, new PixelMouseEventArgs()
                     {
-                        PixelBrush = this._pixRectangels[j][i].Brush,
+                        PixelBrush = this._pixRectangels[i][j].Brush,
                         X = j,
                         Y = i,
                     });
+
+                    break;
                 }
             }
         }
@@ -328,17 +330,19 @@ namespace MCPArtNavi.UserApp
             {
                 for (var j = 0; j < this._pixRectangels[i].Length; j++)
                 {
-                    var pixRect = this._pixRectangels[j][i].Rect;
+                    var pixRect = this._pixRectangels[i][j].Rect;
                     if (pixRect.Left > point.X || pixRect.Left + pixRect.Width < point.X ||
                         pixRect.Top > point.Y || pixRect.Top + pixRect.Height < point.Y)
                         continue;
 
                     this._pixelMouseMove?.Invoke(this, new PixelMouseEventArgs()
                     {
-                        PixelBrush = this._pixRectangels[j][i].Brush,
+                        PixelBrush = this._pixRectangels[i][j].Brush,
                         X = j,
                         Y = i,
                     });
+
+                    break;
                 }
             }
         }
@@ -371,7 +375,7 @@ namespace MCPArtNavi.UserApp
             {
                 for (var j = 0; j < this._pixelHeight; j++)
                 {
-                    var rr = this._pixRectangels[i][j];
+                    var rr = this._pixRectangels[j][i];
                     fe.Dispatcher.Invoke(() => e.DrawingContext.DrawRectangle(rr.Brush, null, rr.Rect));
                 }
             }

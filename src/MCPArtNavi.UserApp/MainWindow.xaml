@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MCPArtNavi.UserApp"
         xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
         mc:Ignorable="d"
-        Title="MCPixel Art Navi" Height="450" Width="800" MinWidth="200" MinHeight="50">
+        Title="MCPixel Art Navi" Height="640" Width="860" MinWidth="200" MinHeight="200">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
@@ -50,9 +50,31 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" Width="100" Visibility="{Binding ToolPanelVisivility}">
-                
-            </StackPanel>
+            <Grid Grid.Column="0" Width="74" Visibility="{Binding ToolPanelVisivility}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                <ListBox ItemsSource="{Binding AvailableMCItems}" SelectedItem="{Binding SelectedToolMCItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <!-- <Setter Property="HorizontalContentAlignment" Value="Stretch"/> -->
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0" Width="30" Height="30" Background="{Binding ItemBrush}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip Content="{Binding Item.ItemName}"/>
+                                </ToolTipService.ToolTip>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
             
             <ScrollViewer Grid.Column="1" Height="Auto" Background="Gray" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" DataContext="{Binding CanvasViewModel}" Visibility="{Binding DataContext.CanvasVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                 <local:PixelCanvas Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" Margin="30" ChunkLinesLayerVisibility="{Binding DataContext.ChunkLinesVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
@@ -73,7 +95,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="{Binding OnMouseItemNameText}"/>
+                <TextBlock Text="{Binding BottomHintText}"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock>Zoom　</TextBlock>

@@ -21,5 +21,22 @@ namespace MCPArtNavi.Common
         {
             return Int32.Parse(_getSizeStr(size).Split('x')[1]);
         }
+
+        public static string ToNameString(this PixelArtSize size)
+        {
+            var result = $"Width={size.GetWidth()}, Height={size.GetHeight()}";
+            
+            switch (size)
+            {
+                case PixelArtSize.Size256x128:
+                    result += " (2:1)";
+                    break;
+                case PixelArtSize.Size256x144:
+                    result += " (16:9)";
+                    break;
+            }
+
+            return result;
+        }
     }
 }

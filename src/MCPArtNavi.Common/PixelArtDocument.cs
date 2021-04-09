@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MCPArtNavi.Common
 {
-    public class PixelArtDocument
+    public class PixelArtDocument : PixelArtDocumentMetadata
     {
         // 非公開フィールド
 
@@ -27,12 +27,6 @@ namespace MCPArtNavi.Common
                 this._validatePixelsLength(value);
                 this._pixels = value;
             }
-        }
-
-        public string DocumentTitle
-        {
-            get;
-            set;
         }
 
 

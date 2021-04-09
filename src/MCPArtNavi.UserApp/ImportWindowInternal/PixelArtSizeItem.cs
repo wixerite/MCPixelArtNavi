@@ -27,7 +27,7 @@ namespace MCPArtNavi.UserApp.ImportWindowInternal
         public PixelArtSizeItem(PixelArtSize value)
         {
             this.Value = value;
-            this._text = this.Value.GetWidth() + "x" + this.Value.GetHeight();
+            this._text = this.Value.ToNameString();
         }
     }
 }
