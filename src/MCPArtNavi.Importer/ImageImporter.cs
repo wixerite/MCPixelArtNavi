@@ -102,6 +102,8 @@ namespace MCPArtNavi.Importer
             return new PixelArtDocument()
             {
                 DocumentTitle = documentTitle,
+                DocumentAuthor = "",
+                DocumentDescription = "",
                 Size = this._targetSize,
                 Pixels = pixels
             };

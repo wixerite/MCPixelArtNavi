@@ -10,25 +10,12 @@
         <local:DocumentPropertyWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <ListBox ItemsSource="{Binding UsedMCItems}">
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="{Binding Item.ItemName}" Grid.Column="0"/>
-                        <TextBlock Text="{Binding Count}" Grid.Column="1"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <DataGrid ItemsSource="{Binding UsedMCItems}" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item name" Binding="{Binding Item.ItemName}"/>
+                <DataGridTextColumn Header="Item usage" Binding="{Binding Count}"/>
+            </DataGrid.Columns>
+            
+        </DataGrid>
     </Grid>
 </Window>

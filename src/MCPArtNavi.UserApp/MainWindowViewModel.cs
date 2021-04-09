@@ -170,6 +170,11 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._export_command);
         }
 
+        public DelegateCommand EditDocumentProperty
+        {
+            get => new DelegateCommand(this._editDocumentProperty_command);
+        }
+
         //public DelegateCommand LoadExampleImageCommand
         //{
         //    get => new DelegateCommand(this._debug_loadExampleArt);
@@ -186,6 +191,7 @@ namespace MCPArtNavi.UserApp
             this.ShowToolPanelChecked = false;
             this.ToolPanelVisivility = Visibility.Collapsed;
             this.AvailableMCItems = new ObservableCollection<AvailableMCItem>(MCItemUtils.EnabledItems.Select(e => new AvailableMCItem() { Item = e }));
+            this.WindowTitle = Properties.Resources.ApplicationTitle;
 
             if (App.Current != null && App.Current.MainWindow != null)
             {
@@ -330,9 +336,7 @@ namespace MCPArtNavi.UserApp
             if (saveFileDialog.ShowDialog() == true)
             {
                 var doc = this.CanvasViewModel.GetPixelArt();
-                doc.DocumentTitle = this.CurrentDocumentMetadata.DocumentTitle;
-                doc.DocumentAuthor = this.CurrentDocumentMetadata.DocumentAuthor;
-                doc.DocumentDescription = this.CurrentDocumentMetadata.DocumentDescription;
+                doc.ApplyMetadata(this.CurrentDocumentMetadata);
 
                 using (var fs = File.OpenWrite(saveFileDialog.FileName))
                 {
@@ -354,12 +358,7 @@ namespace MCPArtNavi.UserApp
                 this.CanvasViewModel.LoadPixelArt(doc);
 
                 this.DocumentChanged = true;
-                this.CurrentDocumentMetadata = new PixelArtDocumentMetadata()
-                {
-                    DocumentTitle = "Imported document",
-                    DocumentAuthor = "",
-                    DocumentDescription = "",
-                };
+                this.CurrentDocumentMetadata = doc;
             }
         }
 
@@ -380,6 +379,24 @@ namespace MCPArtNavi.UserApp
                     encoder.Frames.Add(BitmapFrame.Create(this.CanvasViewModel.CanvasToBitmap()));
                     encoder.Save(fs);
                 }
+            }
+        }
+
+        private void _editDocumentProperty_command()
+        {
+            var inputDoc = this.CanvasViewModel.GetPixelArt();
+            inputDoc.ApplyMetadata(this.CurrentDocumentMetadata);
+
+            var w = new DocumentPropertyWindow();
+            var d = (DocumentPropertyWindowViewModel)w.DataContext;
+
+            d.InputDocument = inputDoc;
+            w.ShowDialog();
+
+            if (d.OutputDocumentMetadata != null)
+            {
+                this.DocumentChanged = true;
+                this.CurrentDocumentMetadata = d.OutputDocumentMetadata;
             }
         }
 

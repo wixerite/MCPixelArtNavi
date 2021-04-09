@@ -145,7 +145,7 @@ namespace MCPArtNavi.UserApp
 
                     Exception ex = null;
 
-                    var doc = Task.Run(async () => await importer.ImportAsync(fs, "Imported Art").ContinueWith(r =>
+                    var doc = Task.Run(async () => await importer.ImportAsync(fs, Path.GetFileNameWithoutExtension(this.ImportFilePath)).ContinueWith(r =>
                     {
                         ex = r.Exception;
                         if (ex is AggregateException)

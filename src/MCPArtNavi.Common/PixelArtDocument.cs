@@ -42,6 +42,16 @@ namespace MCPArtNavi.Common
         }
 
 
+        // 公開メソッド
+
+        public void ApplyMetadata(PixelArtDocumentMetadata metadata)
+        {
+            this.DocumentTitle = metadata.DocumentTitle;
+            this.DocumentAuthor = metadata.DocumentAuthor;
+            this.DocumentDescription = metadata.DocumentDescription;
+        }
+
+
         // 公開静的メソッド
 
         public static PixelArtDocument GetEmptyDocument(PixelArtSize size, IMCItem fill)

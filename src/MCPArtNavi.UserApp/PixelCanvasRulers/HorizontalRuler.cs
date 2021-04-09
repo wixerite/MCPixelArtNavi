@@ -39,9 +39,12 @@ namespace MCPArtNavi.UserApp.PixelCanvasRulers
 
             for (var i = 0; i < this.Width + 1; i += 1)
             {
-                var rect = new Rect(i, 0, 0.05, 10);
+                var rect = new Rect(i, 10, 0.05, 10);
                 if (i % 4 == 0)
+                {
+                    rect.Y = 0;
                     rect.Height = 20;
+                }
 
                 drawingContext.DrawRectangle(this._rulerBrush, null, rect);
             }
