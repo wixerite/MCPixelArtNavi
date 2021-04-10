@@ -22,6 +22,8 @@ namespace MCPArtNavi.UserApp
         private EventHandler<ItemMouseEventArgs> _itemMouseMove;
         private EventHandler<ItemMouseEventArgs> _itemMouseDown;
 
+        private EventHandler _canvasEdit;
+
         private bool _isDrag;
 
 
@@ -46,6 +48,12 @@ namespace MCPArtNavi.UserApp
         {
             add => this._itemMouseDown += value;
             remove => this._itemMouseDown -= value;
+        }
+
+        public event EventHandler CanvasEdit
+        {
+            add => this._canvasEdit += value;
+            remove => this._canvasEdit -= value;
         }
 
 
@@ -145,6 +153,8 @@ namespace MCPArtNavi.UserApp
                 return;
             this.MapHandler.SetPixel(e.X, e.Y, this._palette.GetByMCItem(this.PenItem).Brush);
             this.MapHandler.RedrawLayout();
+
+            this._canvasEdit?.Invoke(this, EventArgs.Empty);
         }
 
 

@@ -25,7 +25,6 @@ namespace MCPArtNavi.UserApp
     {
         // 非公開フィールド
 
-
         // 公開プロパティ
 
         /// <summary>
@@ -150,6 +149,11 @@ namespace MCPArtNavi.UserApp
 
         // コマンド
 
+        public DelegateCommand SaveCommand
+        {
+            get => new DelegateCommand(this._save_command);
+        }
+
         public DelegateCommand SaveAsCommand
         {
             get => new DelegateCommand(this._saveAs_command);
@@ -170,9 +174,14 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._export_command);
         }
 
-        public DelegateCommand EditDocumentProperty
+        public DelegateCommand EditDocumentPropertyCommand
         {
             get => new DelegateCommand(this._editDocumentProperty_command);
+        }
+
+        public DelegateCommand<CancelEventArgs> WindowClosingCommand
+        {
+            get => new DelegateCommand<CancelEventArgs>(this._windowClosing);
         }
 
 
@@ -205,6 +214,7 @@ namespace MCPArtNavi.UserApp
 
             this.CanvasViewModel = new PixelCanvasViewModel();
             this.CanvasViewModel.ItemMouseMove += _canvasViewModel_ItemMouseMove;
+            this.CanvasViewModel.CanvasEdit += (sender, e) => this.DocumentChanged = true;
             this.CanvasZoom = 5.0d;
         }
 
@@ -319,6 +329,30 @@ namespace MCPArtNavi.UserApp
             }
         }
 
+        private void _save()
+        {
+            var doc = this.CanvasViewModel.GetPixelArt();
+            doc.ApplyMetadata(this.CurrentDocumentMetadata);
+
+            using (var fs = File.OpenWrite(this.DocumentFilePath))
+            {
+                PixelArtFile.SaveTo(fs, doc);
+            }
+
+            this.DocumentChanged = false;
+        }
+
+        private void _save_command()
+        {
+            if (String.IsNullOrEmpty(this.DocumentFilePath) || !File.Exists(this.DocumentFilePath))
+            {
+                this._saveAs_command();
+                return;
+            }
+
+            this._save();
+        }
+
         private void _saveAs_command()
         {
             var saveFileDialog = new SaveFileDialog()
@@ -330,15 +364,8 @@ namespace MCPArtNavi.UserApp
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                var doc = this.CanvasViewModel.GetPixelArt();
-                doc.ApplyMetadata(this.CurrentDocumentMetadata);
-
-                using (var fs = File.OpenWrite(saveFileDialog.FileName))
-                {
-                    PixelArtFile.SaveTo(fs, doc);
-                }
-
-                this.DocumentChanged = false;
+                this.DocumentFilePath = saveFileDialog.FileName;
+                this._save();
             }
         }
 
@@ -392,6 +419,18 @@ namespace MCPArtNavi.UserApp
             {
                 this.DocumentChanged = true;
                 this.CurrentDocumentMetadata = d.OutputDocumentMetadata;
+            }
+        }
+
+        private void _windowClosing(CancelEventArgs e)
+        {
+            if (this.DocumentChanged)
+            {
+                var confirm = MessageBox.Show("", this.WindowTitle, MessageBoxButton.YesNoCancel);
+                if (confirm == MessageBoxResult.Cancel)
+                    e.Cancel = true;
+                else if (confirm == MessageBoxResult.Yes)
+                    this._save_command();
             }
         }
     }

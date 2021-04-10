@@ -4,18 +4,77 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MCPArtNavi.UserApp"
+        xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
         mc:Ignorable="d"
-        Title="Document Property" Height="450" Width="800">
+        Title="{x:Static props:Resources.DocumentPropertyWindow_Title}" Height="450" Width="800">
     <Window.DataContext>
         <local:DocumentPropertyWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <DataGrid ItemsSource="{Binding UsedMCItems}" AutoGenerateColumns="False" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Item name" Binding="{Binding Item.ItemName}"/>
-                <DataGridTextColumn Header="Item usage" Binding="{Binding Count}"/>
-            </DataGrid.Columns>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="10, 10, 10, 0">
+            <TextBlock Text="{x:Static props:Resources.DocumentPropertyWindow_Label_TopLabel}" FontWeight="Bold"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <Grid Margin="10, 10, 10, 0">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin" Value="0, 5, 20, 10"/>
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Margin" Value="0, 5"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static props:Resources.DocumentPropertyWindow_Label_DocumentTitle}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DocumentTitle}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static props:Resources.DocumentPropertyWindow_Label_DocumentAuthor}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DocumentAuthor}"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static props:Resources.DocumentPropertyWindow_Label_DocumentDescription}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DocumentDescription}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static props:Resources.DocumentPropertyWindow_Label_ItemsUsage}"/>
+                </Grid>
             
-        </DataGrid>
+                <DataGrid ItemsSource="{Binding UsedMCItems}" AutoGenerateColumns="False" IsReadOnly="True" Margin="20, 0, 20, 10">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static props:Resources.DocumentPropertyWindow_ItemsUsageGridHeader_ItemName}" Binding="{Binding Item.ItemName}"/>
+                        <DataGridTextColumn Header="{x:Static props:Resources.DocumentPropertyWindow_ItemsUsageGridHeader_ItemUsage}" Binding="{Binding Count}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0, 10, 10, 10"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Width" Value="100"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="{x:Static props:Resources.DocumentPropertyWindow_Button_Cancel}"/>
+            <Button Command="{Binding OkCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="{x:Static props:Resources.DocumentPropertyWindow_Button_OK}"/>
+        </StackPanel>
     </Grid>
 </Window>

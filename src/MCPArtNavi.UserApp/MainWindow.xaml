@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MCPArtNavi.UserApp"
         xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
+        xmlns:bh="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         xmlns:rlscview="clr-namespace:MCPArtNavi.UserApp.PixelCanvasRulers"
-        Title="{Binding WindowTitle}" Height="640" Width="860" MinWidth="200" MinHeight="200" WindowStartupLocation="CenterScreen">
+        Title="{Binding WindowTitle}" Height="640" Width="860" MinWidth="200" MinHeight="200" WindowStartupLocation="CenterScreen"
+        local:MainWindowClosingBehavior.Closing="{Binding WindowClosingCommand}">
     <Window.DataContext>
         <local:MainWindowViewModel/>
     </Window.DataContext>
@@ -21,10 +23,10 @@
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File}">
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_NewFile}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_OpenFile}" Command="{Binding OpenCommand}"/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}" Command="{Binding SaveCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
                 <Separator/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_DocumentProperty}" Command="{Binding EditDocumentProperty}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_DocumentProperty}" Command="{Binding EditDocumentPropertyCommand}"/>
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>

@@ -147,7 +147,7 @@ namespace MCPArtNavi.UserApp.PixelCanvasInternal
 
         public void RedrawLayout()
         {
-            this._redrawLayoutRequested?.Invoke(this, new EventArgs());
+            this._redrawLayoutRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public BitmapSource CanvasToBitmap()

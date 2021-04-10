@@ -120,6 +120,36 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>MC Pixel Art Navi</value>
   </data>
+  <data name="DocumentPropertyWindow_Button_Cancel" xml:space="preserve">
+    <value>キャンセル(_C)</value>
+  </data>
+  <data name="DocumentPropertyWindow_Button_OK" xml:space="preserve">
+    <value>OK(_O)</value>
+  </data>
+  <data name="DocumentPropertyWindow_ItemsUsageGridHeader_ItemName" xml:space="preserve">
+    <value>アイテム名</value>
+  </data>
+  <data name="DocumentPropertyWindow_ItemsUsageGridHeader_ItemUsage" xml:space="preserve">
+    <value>アイテムの数</value>
+  </data>
+  <data name="DocumentPropertyWindow_Label_DocumentAuthor" xml:space="preserve">
+    <value>作成者</value>
+  </data>
+  <data name="DocumentPropertyWindow_Label_DocumentDescription" xml:space="preserve">
+    <value>概要</value>
+  </data>
+  <data name="DocumentPropertyWindow_Label_DocumentTitle" xml:space="preserve">
+    <value>タイトル</value>
+  </data>
+  <data name="DocumentPropertyWindow_Label_ItemsUsage" xml:space="preserve">
+    <value>使用するアイテム:</value>
+  </data>
+  <data name="DocumentPropertyWindow_Label_TopLabel" xml:space="preserve">
+    <value>ドキュメントのプロパティ</value>
+  </data>
+  <data name="DocumentPropertyWindow_Title" xml:space="preserve">
+    <value>ドキュメントのプロパティ</value>
+  </data>
   <data name="ImportWindow_Button_Cancel" xml:space="preserve">
     <value>キャンセル(_C)</value>
   </data>

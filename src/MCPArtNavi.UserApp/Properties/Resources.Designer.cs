@@ -72,6 +72,96 @@ namespace MCPArtNavi.UserApp.Properties {
         /// <summary>
         ///   Cancel(_C) に類似しているローカライズされた文字列を検索します。
         /// </summary>
+        public static string DocumentPropertyWindow_Button_Cancel {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Button_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   OK(_O) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Button_OK {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Button_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Item name に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_ItemsUsageGridHeader_ItemName {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_ItemsUsageGridHeader_ItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Item usage に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_ItemsUsageGridHeader_ItemUsage {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_ItemsUsageGridHeader_ItemUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Author に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Label_DocumentAuthor {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Label_DocumentAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Description に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Label_DocumentDescription {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Label_DocumentDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Title に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Label_DocumentTitle {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Label_DocumentTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Items usage: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Label_ItemsUsage {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Label_ItemsUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Document Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Label_TopLabel {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Label_TopLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Document Property に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string DocumentPropertyWindow_Title {
+            get {
+                return ResourceManager.GetString("DocumentPropertyWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cancel(_C) に類似しているローカライズされた文字列を検索します。
+        /// </summary>
         public static string ImportWindow_Button_Cancel {
             get {
                 return ResourceManager.GetString("ImportWindow_Button_Cancel", resourceCulture);

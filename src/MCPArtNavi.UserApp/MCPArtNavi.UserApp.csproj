@@ -92,6 +92,7 @@
     <Compile Include="ImportWindow.xaml.cs">
       <DependentUpon>ImportWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainWindowClosingBehavior.cs" />
     <Compile Include="MainWindowInternal\AvailableMCItem.cs" />
     <Compile Include="ImportWindowInternal\ImporterMCItem.cs" />
     <Compile Include="ImportWindowInternal\PixelArtSizeItem.cs" />
