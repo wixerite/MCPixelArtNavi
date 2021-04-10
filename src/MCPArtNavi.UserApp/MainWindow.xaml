@@ -1,0 +1,108 @@
+﻿<Window x:Class="MCPArtNavi.UserApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MCPArtNavi.UserApp"
+        xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
+        xmlns:bh="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        xmlns:rlscview="clr-namespace:MCPArtNavi.UserApp.PixelCanvasRulers"
+        Title="{Binding WindowTitle}" Height="640" Width="860" MinWidth="200" MinHeight="200" WindowStartupLocation="CenterScreen"
+        local:MainWindowClosingBehavior.Closing="{Binding WindowClosingCommand}">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File}">
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_NewFile}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_OpenFile}" Command="{Binding OpenCommand}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Save}" Command="{Binding SaveCommand}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_SaveAs}" Command="{Binding SaveAsCommand}"/>
+                <Separator/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_DocumentProperty}" Command="{Binding EditDocumentPropertyCommand}"/>
+                <Separator/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>
+                <Separator/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Exit}" Command="{Binding ExitApplicationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+            </MenuItem>
+            <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View}">
+                <!-- <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowGrid}"/> -->
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowChunk}" IsCheckable="True" IsChecked="{Binding ShowChunkLinesChecked}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowToolPanel}" IsCheckable="True" IsChecked="{Binding ShowToolPanelChecked}"/>
+            </MenuItem>
+            <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help}">
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help_Website}"/>
+                <Separator/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_Help_About}"/>
+            </MenuItem>
+            <!--
+            <MenuItem Header="Debug(_D)">
+                <MenuItem Header="Load example image(_X)" Command="{Binding LoadExampleImageCommand}"/>
+            </MenuItem>
+            -->
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Width="74" Visibility="{Binding ToolPanelVisivility}" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                <ListBox ItemsSource="{Binding AvailableMCItems}" SelectedItem="{Binding SelectedToolMCItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <!-- <Setter Property="HorizontalContentAlignment" Value="Stretch"/> -->
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="Padding" Value="0"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0" Width="30" Height="30" Background="{Binding ItemBrush}">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip Content="{Binding Item.ItemName}"/>
+                                </ToolTipService.ToolTip>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <rlscview:RulerScrollViewer Grid.Column="1" Height="Auto" Background="Gray" DataContext="{Binding CanvasViewModel}" Visibility="{Binding DataContext.CanvasVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" ContentScale="{Binding DataContext.CanvasZoom, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <local:PixelCanvas Width="{Binding PixelArtWidth}" Height="{Binding PixelArtHeight}" PixelWidth="{Binding PixelArtWidth}" PixelHeight="{Binding PixelArtHeight}" CanvasMapHandler="{Binding MapHandler}" ChunkLinesLayerVisibility="{Binding DataContext.ChunkLinesVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                </local:PixelCanvas>
+            </rlscview:RulerScrollViewer>
+        </Grid>
+        <Grid Grid.Row="1" Margin="2">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White" Visibility="{Binding LoadingTextVisibility}">
+                Loading ...
+            </TextBlock>
+        </Grid>
+        <Grid Grid.Row="2" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding BottomHintText}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock>Zoom　</TextBlock>
+                <Slider Width="150" Minimum="1" Maximum="30" Value="{Binding CanvasZoom}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,95 @@
+﻿<Window x:Class="MCPArtNavi.UserApp.ImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MCPArtNavi.UserApp"
+        xmlns:props="clr-namespace:MCPArtNavi.UserApp.Properties"
+        mc:Ignorable="d"
+        Title="{x:Static props:Resources.ImportWindow_Title}" Height="450" Width="800" WindowStartupLocation="CenterOwner">
+    <Window.DataContext>
+        <local:ImportWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel AllowDrop="True" Grid.Row="0">
+            <StackPanel Margin="10, 10, 10, 0">
+                <TextBlock Text="{x:Static props:Resources.ImportWindow_Label_ImportFrom}"/>
+                <Grid Margin="0, 10, 0, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding ImportFilePath}" Margin="0, 0, 10, 0" VerticalContentAlignment="Center"/>
+                    <Button Grid.Column="1" Command="{Binding ReferenceFileCommand}" Padding="5" Content="{x:Static props:Resources.ImportWindow_Button_Reference}"/>
+                    <TextBlock Text="aaa" VerticalAlignment="Center" Grid.Column="0" Margin="10, 0" Foreground="Gray" Visibility="Hidden">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <!-- NOT WORKING!! -->
+                                    <DataTrigger Binding="{Binding ImportFilePath}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ImportFilePath}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </StackPanel>
+
+            <Grid Margin="10, 10, 10, 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Margin="0, 0, 10, 0" VerticalAlignment="Center" Text="{x:Static props:Resources.ImportWindow_Label_ImportSize}"/>
+                <ComboBox Grid.Column="1" ItemsSource="{Binding ArtSizes}" SelectedItem="{Binding ImportSize}" SelectedIndex="1"/>
+            </Grid>
+
+            <StackPanel Margin="10, 10, 10, 0">
+                <TextBlock Text="{x:Static props:Resources.ImportWindow_Label_EnabledItems}"/>
+                <Grid  Background="#efefef" Margin="10, 5">
+                    <Border BorderThickness="5">
+                        <TextBlock Text="{x:Static props:Resources.ImportWindow_Label_EnabledItemsHint}"/>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+        <ListBox ItemsSource="{Binding MCItems}" Grid.Row="1" Margin="10, 0">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Use}"/>
+                        <Rectangle Fill="{Binding ItemBrush}" Width="50" Margin="5, 0"/>
+                        <TextBlock Text="{Binding Item.ItemName}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0, 10, 10, 10"/>
+                    <Setter Property="Padding" Value="5"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <Button Command="{Binding CancelCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="{x:Static props:Resources.ImportWindow_Button_Cancel}"/>
+            <Button Command="{Binding ImportCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Content="{x:Static props:Resources.ImportWindow_Button_Import}"/>
+        </StackPanel>
+    </Grid>
+</Window>
