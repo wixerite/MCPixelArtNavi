@@ -31,7 +31,7 @@
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>
                 <Separator/>
-                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Exit}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Exit}" Command="{Binding ExitApplicationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
             </MenuItem>
             <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View}">
                 <!-- <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_View_ShowGrid}"/> -->
