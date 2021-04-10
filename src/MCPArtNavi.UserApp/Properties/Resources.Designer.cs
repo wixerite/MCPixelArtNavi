@@ -232,6 +232,17 @@ namespace MCPArtNavi.UserApp.Properties {
         }
         
         /// <summary>
+        ///   You did not save your changes.
+        ///
+        ///Are you sure you want to exit? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        public static string MainWindow_Message_ConfirmExit {
+            get {
+                return ResourceManager.GetString("MainWindow_Message_ConfirmExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   File(_F) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         public static string MainWindow_TopMenu_File {

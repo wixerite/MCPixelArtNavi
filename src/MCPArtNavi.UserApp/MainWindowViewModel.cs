@@ -179,9 +179,14 @@ namespace MCPArtNavi.UserApp
             get => new DelegateCommand(this._editDocumentProperty_command);
         }
 
+        public DelegateCommand<Object> ExitApplicationCommand
+        {
+            get => new DelegateCommand<object>(this._exitApplication_command);
+        }
+
         public DelegateCommand<CancelEventArgs> WindowClosingCommand
         {
-            get => new DelegateCommand<CancelEventArgs>(this._windowClosing);
+            get => new DelegateCommand<CancelEventArgs>(this._windowClosing_command);
         }
 
 
@@ -422,15 +427,21 @@ namespace MCPArtNavi.UserApp
             }
         }
 
-        private void _windowClosing(CancelEventArgs e)
+        private void _exitApplication_command(Object e)
+        {
+            ((Window)e).Close();
+        }
+
+        private void _windowClosing_command(CancelEventArgs e)
         {
             if (this.DocumentChanged)
             {
-                var confirm = MessageBox.Show("", this.WindowTitle, MessageBoxButton.YesNoCancel);
+                //No changes have been saved.
+                var confirm = MessageBox.Show(Properties.Resources.MainWindow_Message_ConfirmExit, this.WindowTitle, MessageBoxButton.OKCancel);
                 if (confirm == MessageBoxResult.Cancel)
                     e.Cancel = true;
-                else if (confirm == MessageBoxResult.Yes)
-                    this._save_command();
+                //else if (confirm == MessageBoxResult.Yes)
+                //    this._save_command();
             }
         }
     }
