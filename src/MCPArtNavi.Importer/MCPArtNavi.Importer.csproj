@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ForCheck.cs" />
     <Compile Include="ImageImporter.cs" />
+    <Compile Include="ImageImporterInternals\IMCItemExtension.cs" />
     <Compile Include="ImageImporterInternals\XyzDifference.cs" />
     <Compile Include="ImporterBase.cs" />
     <Compile Include="ImporterPalette.cs" />
