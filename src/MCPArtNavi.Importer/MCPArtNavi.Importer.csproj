@@ -44,10 +44,6 @@
   <ItemGroup>
     <Compile Include="ForCheck.cs" />
     <Compile Include="ImageImporter.cs" />
-    <None Include="ImageImporterInternals\FastCIE2kDiff.cs" />
-    <Compile Include="ImageImporterInternals\IMCItemExtension.cs" />
-    <Compile Include="ImageImporterInternals\LabDifference.cs" />
-    <Compile Include="ImageImporterInternals\MathEx.cs" />
     <Compile Include="ImageImporterInternals\XyzDifference.cs" />
     <Compile Include="ImporterBase.cs" />
     <Compile Include="ImporterPalette.cs" />
