@@ -396,7 +396,7 @@ namespace MCPArtNavi.UserApp
             var saveFileDialog = new SaveFileDialog()
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                FileName = "export.png",
+                FileName = this.CurrentDocumentMetadata?.DocumentTitle,
                 Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|All Files (*.*)|*.*"
             };
 
