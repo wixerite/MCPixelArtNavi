@@ -17,6 +17,8 @@ using Prism.Mvvm;
 using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
+using MCPArtNavi.Exporter;
+using MCPArtNavi.Exporter.OpenXML;
 using MCPArtNavi.UserApp.MainWindowInternal;
 
 namespace MCPArtNavi.UserApp
@@ -395,16 +397,26 @@ namespace MCPArtNavi.UserApp
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 FileName = "export.png",
-                Filter = "PNG Image (*.png)|*.png|All Files (*.*)|*.*"
+                Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|All Files (*.*)|*.*"
             };
 
             if (saveFileDialog.ShowDialog() == true)
             {
-                using (var fs = File.OpenWrite(saveFileDialog.FileName))
+                using (var fs = new FileStream(saveFileDialog.FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                 {
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(this.CanvasViewModel.CanvasToBitmap()));
-                    encoder.Save(fs);
+                    switch (Path.GetExtension(saveFileDialog.FileName).ToLower())
+                    {
+                        case ".xlsx":
+                            var ssExporter = new SpreadSheetExporter();
+                            Task.Run(async () => await ssExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), fs)).Wait();
+                            break;
+                        default:
+                            var encoder = new PngBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(this.CanvasViewModel.CanvasToBitmap()));
+                            encoder.Save(fs);
+                            break;
+                    }
+
                 }
             }
         }

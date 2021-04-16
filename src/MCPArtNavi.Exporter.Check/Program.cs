@@ -18,7 +18,7 @@ namespace MCPArtNavi.Exporter.Check
             var exporter = new SpreadSheetExporter();
             using (var s = new MemoryStream())
             {
-                var r = exporter.ExportAsync(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.First()), s).Result;
+                var r = exporter.ExportAsync(PixelArtDocument.GetEmptyDocument(PixelArtSize.Size128x128, MCItemUtils.EnabledItems.Skip(2).First()), s).Result;
                 Console.WriteLine(s.Length);
 
                 using (var bw = new BinaryWriter(File.OpenWrite("test.xlsx")))
