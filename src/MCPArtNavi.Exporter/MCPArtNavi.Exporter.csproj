@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46343EBE-E580-490D-8041-54574F45299D}</ProjectGuid>
+    <ProjectGuid>{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MCPArtNavi.Importer</RootNamespace>
-    <AssemblyName>mcpan-impt</AssemblyName>
+    <RootNamespace>MCPArtNavi.Exporter</RootNamespace>
+    <AssemblyName>mcpan-exprt</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,23 +31,25 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Program Files (x86)\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ForCheck.cs" />
-    <Compile Include="ImageImporter.cs" />
-    <Compile Include="ImageImporterInternals\IMCItemExtension.cs" />
-    <Compile Include="ImageImporterInternals\XyzDifference.cs" />
-    <Compile Include="ImporterBase.cs" />
-    <Compile Include="ImporterPalette.cs" />
+    <Compile Include="ExporterBase.cs" />
+    <Compile Include="ExportOption.cs" />
+    <Compile Include="ExportResult.cs" />
+    <Compile Include="OpenXML\SpreadSheetExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +57,9 @@
       <Project>{164316cb-b20d-4ce0-94a7-fdb51df63d68}</Project>
       <Name>MCPArtNavi.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\Exporter\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

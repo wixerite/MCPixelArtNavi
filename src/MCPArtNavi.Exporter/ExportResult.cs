@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MCPArtNavi.Importer.ImageImporterInternals
+namespace MCPArtNavi.Exporter
 {
-    internal static class LabDifference
+    public class ExportResult
     {
     }
 }

@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{46343EBE-E580-490D-8041-54574F45299D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MCPArtNavi.Importer</RootNamespace>
-    <AssemblyName>mcpan-impt</AssemblyName>
+    <ProjectGuid>{663F4C8F-1048-4655-B68E-509D803388C5}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MCPArtNavi.Exporter.Check</RootNamespace>
+    <AssemblyName>MCPArtNavi.Exporter.Check</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,18 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ForCheck.cs" />
-    <Compile Include="ImageImporter.cs" />
-    <Compile Include="ImageImporterInternals\IMCItemExtension.cs" />
-    <Compile Include="ImageImporterInternals\XyzDifference.cs" />
-    <Compile Include="ImporterBase.cs" />
-    <Compile Include="ImporterPalette.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MCPArtNavi.Common\MCPArtNavi.Common.csproj">
       <Project>{164316cb-b20d-4ce0-94a7-fdb51df63d68}</Project>
       <Name>MCPArtNavi.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MCPArtNavi.Exporter\MCPArtNavi.Exporter.csproj">
+      <Project>{49eabdbf-df5a-4cd9-b292-bfef1317a5af}</Project>
+      <Name>MCPArtNavi.Exporter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
