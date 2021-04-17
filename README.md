@@ -32,5 +32,5 @@
 ### 4. Downloads
  本ソフトウェアの公式ビルドは、下記サイトにて頒布しております。  
 
-> MC Pixel Art Navi - ソフトウェア | ０と１の世界の見習い探検家
+> MC Pixel Art Navi - ソフトウェア | ０と１の世界の見習い探検家  
 > https://www.a32kita.net/software/mcpxartnavi/
