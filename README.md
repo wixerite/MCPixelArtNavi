@@ -34,3 +34,6 @@
 
 > MC Pixel Art Navi - ソフトウェア | ０と１の世界の見習い探検家  
 > https://www.a32kita.net/software/mcpxartnavi/
+
+### 5. How to use?
+ こちらをご覧ください。
