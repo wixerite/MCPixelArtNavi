@@ -147,6 +147,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.ja-JP.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="LicenseDocs\Newtonsoft.Json\LICENSE.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -179,5 +180,8 @@
     </SplashScreen>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Resource Include="LicenseDocs\Prism\LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
