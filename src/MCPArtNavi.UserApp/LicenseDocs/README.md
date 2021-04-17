@@ -7,8 +7,8 @@
 > DocumentFormat.OpenXml  
 > ver 2.12.3
 
-* **用途: ** Excel 形式へのデータ出力
-* **ライセンス: ** [MIT License](DocumentFormat.OpenXml/LICENSE.txt)
+* **用途 :** Excel 形式へのデータ出力
+* **ライセンス :** [MIT License](DocumentFormat.OpenXml/LICENSE.txt)
 
 #### [Prism / Prism.Wpf](https://github.com/PrismLibrary/Prism)
 
@@ -16,5 +16,5 @@
 > Prism.Wpf  
 > ver 8.0
 
-* **用途: ** MVVM パターン用インフラストラクチャ
-* **ライセンス: ** [MIT License](Prism/LICENSE.txt)
+* **用途 :** MVVM パターン用インフラストラクチャ
+* **ライセンス :** [MIT License](Prism/LICENSE.txt)
