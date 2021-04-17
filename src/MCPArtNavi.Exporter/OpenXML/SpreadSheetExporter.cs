@@ -25,26 +25,23 @@ namespace MCPArtNavi.Exporter.OpenXML
             set;
         }
 
+        /// <summary>
+        /// <see cref="SpreadSheetExporter"/> クラスを初期化します。
+        /// </summary>
         static SpreadSheetExporter()
         {
+            // カラム名に使用するアルファベット
             _columnChars = new char[]
             {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
             };
         }
 
-        //private Cell _insertCellInWorkSheet(string columnName, uint rowIndex, Worksheet workSheet)
-        //{
-        //    var sheetData = workSheet.GetFirstChild<SheetData>();
-        //    var cellReference = columnName + rowIndex.ToString();
-
-        //    var row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex);
-        //    if (row == null)
-        //    {
-        //        row = new Row() { RowIndex = rowIndex };
-        //    }
-        //}
-
+        /// <summary>
+        /// 0 起点の左端からの距離をもとにアルファベットから成るカラム名を生成します。(例: AB)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <returns></returns>
         private string _leftToColumnName(int left)
         {
             if (left < 0)
@@ -53,16 +50,32 @@ namespace MCPArtNavi.Exporter.OpenXML
             return this._leftToColumnName(left / _columnChars.Length - 1) + _columnChars[left % 26];
         }
 
+        /// <summary>
+        /// 0 起点の上端からの距離をもとに数値の行番号を生成します。(例: 21)
+        /// </summary>
+        /// <param name="top"></param>
+        /// <returns></returns>
         private uint _topToRowNumber(int top)
         {
             return (uint)(top + 1);
         }
 
+        /// <summary>
+        /// <see cref="Cell"/> の CellReference プロパティ用のセルの位置情報を生成します。 (例: AB21)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         private string _toCellReference(int left, int top)
         {
             return this._leftToColumnName(left) + this._topToRowNumber(top).ToString();
         }
 
+        /// <summary>
+        /// <see cref="IMCItem.ItemColor"/> の文字列 (#RRGGBB 形式) から Fill 用のカラーコード (AARRGGBB 形式) を生成します。
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private string _mcItemToArgbCode(IMCItem item)
         {
             return "FF" + item.ItemColor.Replace("#", "").ToUpper();
@@ -88,6 +101,11 @@ namespace MCPArtNavi.Exporter.OpenXML
             return fill;
         }
 
+        /// <summary>
+        /// Fill のインデックス番号を参照する <see cref="CellFormat"/> を生成します。
+        /// </summary>
+        /// <param name="fillIndex"></param>
+        /// <returns></returns>
         private CellFormat _createCellFormatFromFill(int fillIndex)
         {
             return new CellFormat()
