@@ -36,6 +36,7 @@ namespace MCPArtNavi.UserApp
         private Grid _rootLayer;
         private HandleableElement _pixelMapLayer;
         private HandleableElement _chunkLinesLayer;
+        private HandleableElement _mouseoverBorderLayer;
 
         private RenderRectangle[][] _pixRectangels;
         private RenderRectangle[] _chunksVerticalLines;
@@ -157,6 +158,8 @@ namespace MCPArtNavi.UserApp
 
             this._pixelMapLayer = new HandleableElement();
             this._pixelMapLayer.Rendering += _pixelMapLayer_Rendering;
+
+            this._mouseoverBorderLayer = new HandleableElement();
 
             this._rootLayer.Children.Add(this._pixelMapLayer);
             this._rootLayer.Children.Add(this._chunkLinesLayer);

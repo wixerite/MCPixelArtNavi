@@ -9,11 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.UserApp", "MCPAr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.Importer", "MCPArtNavi.Importer\MCPArtNavi.Importer.csproj", "{46343EBE-E580-490D-8041-54574F45299D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.Importer.Check", "MCPArtNavi.Importer.Check\MCPArtNavi.Importer.Check.csproj", "{802EB535-4C03-46EC-B4A7-7C15286A2CC9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.Exporter", "MCPArtNavi.Exporter\MCPArtNavi.Exporter.csproj", "{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPArtNavi.Exporter.Check", "MCPArtNavi.Exporter.Check\MCPArtNavi.Exporter.Check.csproj", "{663F4C8F-1048-4655-B68E-509D803388C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBDD6025-C261-4F61-8431-2D9D1AE9653B}"
 	ProjectSection(SolutionItems) = preProject
@@ -38,18 +34,10 @@ Global
 		{46343EBE-E580-490D-8041-54574F45299D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46343EBE-E580-490D-8041-54574F45299D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46343EBE-E580-490D-8041-54574F45299D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{802EB535-4C03-46EC-B4A7-7C15286A2CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{802EB535-4C03-46EC-B4A7-7C15286A2CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{802EB535-4C03-46EC-B4A7-7C15286A2CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{802EB535-4C03-46EC-B4A7-7C15286A2CC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49EABDBF-DF5A-4CD9-B292-BFEF1317A5AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{663F4C8F-1048-4655-B68E-509D803388C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{663F4C8F-1048-4655-B68E-509D803388C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{663F4C8F-1048-4655-B68E-509D803388C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{663F4C8F-1048-4655-B68E-509D803388C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
