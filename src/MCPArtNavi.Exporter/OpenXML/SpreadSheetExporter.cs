@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// Microsoft Corporation Open XML SDK
+// Open XML SDK
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -25,26 +25,23 @@ namespace MCPArtNavi.Exporter.OpenXML
             set;
         }
 
+        /// <summary>
+        /// <see cref="SpreadSheetExporter"/> クラスを初期化します。
+        /// </summary>
         static SpreadSheetExporter()
         {
+            // カラム名に使用するアルファベット
             _columnChars = new char[]
             {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
             };
         }
 
-        //private Cell _insertCellInWorkSheet(string columnName, uint rowIndex, Worksheet workSheet)
-        //{
-        //    var sheetData = workSheet.GetFirstChild<SheetData>();
-        //    var cellReference = columnName + rowIndex.ToString();
-
-        //    var row = sheetData.Elements<Row>().FirstOrDefault(r => r.RowIndex == rowIndex);
-        //    if (row == null)
-        //    {
-        //        row = new Row() { RowIndex = rowIndex };
-        //    }
-        //}
-
+        /// <summary>
+        /// 0 起点の左端からの距離をもとにアルファベットから成るカラム名を生成します。(例: AB)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <returns></returns>
         private string _leftToColumnName(int left)
         {
             if (left < 0)
@@ -53,14 +50,70 @@ namespace MCPArtNavi.Exporter.OpenXML
             return this._leftToColumnName(left / _columnChars.Length - 1) + _columnChars[left % 26];
         }
 
+        /// <summary>
+        /// 0 起点の上端からの距離をもとに数値の行番号を生成します。(例: 21)
+        /// </summary>
+        /// <param name="top"></param>
+        /// <returns></returns>
         private uint _topToRowNumber(int top)
         {
             return (uint)(top + 1);
         }
 
+        /// <summary>
+        /// <see cref="Cell"/> の CellReference プロパティ用のセルの位置情報を生成します。 (例: AB21)
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         private string _toCellReference(int left, int top)
         {
             return this._leftToColumnName(left) + this._topToRowNumber(top).ToString();
+        }
+
+        /// <summary>
+        /// <see cref="IMCItem.ItemColor"/> の文字列 (#RRGGBB 形式) から Fill 用のカラーコード (AARRGGBB 形式) を生成します。
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private string _mcItemToArgbCode(IMCItem item)
+        {
+            return "FF" + item.ItemColor.Replace("#", "").ToUpper();
+        }
+
+        /// <summary>
+        /// <see cref="IMCItem"/> の色情報を使用して、<see cref="Fill"/> を生成します。
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private Fill _createFillFromMCItem(IMCItem item)
+        {
+            // "#RRGGBB" => "FFRRGGBB"
+            var backgroundColorCode = HexBinaryValue.FromString(this._mcItemToArgbCode(item));
+
+            var pFill = new PatternFill() { PatternType = PatternValues.Solid };
+            pFill.Append(new ForegroundColor() { Rgb = backgroundColorCode });
+            pFill.Append(new BackgroundColor() { Rgb = backgroundColorCode });
+
+            var fill = new Fill();
+            fill.Append(pFill);
+
+            return fill;
+        }
+
+        /// <summary>
+        /// Fill のインデックス番号を参照する <see cref="CellFormat"/> を生成します。
+        /// </summary>
+        /// <param name="fillIndex"></param>
+        /// <returns></returns>
+        private CellFormat _createCellFormatFromFill(int fillIndex)
+        {
+            return new CellFormat()
+            {
+                FontId = 0,
+                FillId = (uint)fillIndex, // fill と同じインデックス番号
+                BorderId = 0,
+            };
         }
 
         public override async Task<ExportResult> ExportAsync(PixelArtDocument document, Stream stream)
@@ -75,9 +128,10 @@ namespace MCPArtNavi.Exporter.OpenXML
                 // SheetData よりも先に Columns が必要
                 new Columns(new Column()
                 {
+                    // 列の幅など
                     Min = 1u,
                     Max = (uint)document.Size.GetWidth(),
-                    Width = 3.3,
+                    Width = 3.2,
                     CustomWidth = true,
                 }),
                 new SheetData());
@@ -97,61 +151,58 @@ namespace MCPArtNavi.Exporter.OpenXML
 
             // スタイル生成 :: アイテム塗りつぶしの生成
             var enabledItems = MCItemUtils.EnabledItems.ToList();
-            var fillList = enabledItems.Select(e =>
+            var fillList = new List<Fill>();
+
+            // Fill[0]: デフォルト fill の追加 (頭に追加してデフォルト化)
+            fillList.Add(new Fill()
             {
-                // FFRRGGBB
-                var backgroundColorCode = "FF" + e.ItemColor.Replace("#", "").ToUpper();
-
-                var pFill = new PatternFill() { PatternType = PatternValues.Solid };
-                pFill.Append(new ForegroundColor() { Rgb = HexBinaryValue.FromString(backgroundColorCode) });
-                pFill.Append(new BackgroundColor() { Rgb = HexBinaryValue.FromString(backgroundColorCode) });
-
-                var fill = new Fill();
-                fill.Append(pFill);
-
-                return fill;
-            }).ToList();
-
-            // デフォルト fill の追加 (頭に追加してデフォルト化)
-            fillList.Insert(0, new Fill()
-            {
+                // 固定値
                 PatternFill = new PatternFill() { PatternType = PatternValues.None }
             });
 
-            // 予約枠を潰す
-            fillList.Insert(1, new Fill()
+            // Fill[1]: 予約枠を潰す
+            fillList.Add(new Fill()
             {
+                // 固定値
                 PatternFill = new PatternFill() { PatternType = PatternValues.Gray125 }
             });
 
-            // デフォルト fill を含む、すべての fill に対応する cellFormat の生成
-            var cellFormatList = fillList.Select((e, idx) =>
-            {
-                return new CellFormat()
-                {
-                    FontId = 0,
-                    FillId = (uint)idx, // fill と同じインデックス番号
-                    BorderId = 0,
-                };
-            }).ToList();
+            // Fill[2 ～]: アイテムの色情報の Fill
+            fillList.AddRange(enabledItems.Select(this._createFillFromMCItem));
 
-            stylesPart.Stylesheet = new Stylesheet(new Fonts(new Font(new Color() { Theme = UInt32Value.FromUInt32(1U) })
+            // デフォルト fill を含む、すべての fill に対応する cellFormat の生成
+            var cellFormatList = fillList.Select((e, idx) => this._createCellFormatFromFill(idx)).ToList();
+
+            // デフォルト フォント (特に中身にこだわりはない)
+            var font = new Font(new Color() { Theme = UInt32Value.FromUInt32(1U) })
             {
                 FontName = new FontName() { Val = StringValue.FromString("Arial") },
                 FontSize = new FontSize() { Val = DoubleValue.FromDouble(11d) },
                 FontFamilyNumbering = new FontFamilyNumbering() { Val = 2 },
                 FontCharSet = new FontCharSet() { Val = 128 },
                 FontScheme = new FontScheme() { Val = FontSchemeValues.Minor },
-            }), new Fills(fillList), new Borders(new Border()), new CellFormats(cellFormatList), new CellStyles(new CellStyle()
+            };
+
+            // デフォルト セル スタイル
+            var cellStyle = new CellStyle()
             {
                 Name = StringValue.FromString("Normal"),
                 FormatId = 0,
                 BuiltinId = 0,
-            }), new DifferentialFormats(), new TableStyles()
-            {
-                DefaultTableStyle = StringValue.FromString("TableStyleMedium9"),
-                DefaultPivotStyle = StringValue.FromString("PivotStyleLight16"),
-            });
+            };
+
+            stylesPart.Stylesheet = new Stylesheet(
+                new Fonts(font),
+                new Fills(fillList),
+                new Borders(new Border()),
+                new CellFormats(cellFormatList),
+                new CellStyles(cellStyle),
+                new DifferentialFormats(),
+                new TableStyles()
+                {
+                    DefaultTableStyle = StringValue.FromString("TableStyleMedium9"),
+                    DefaultPivotStyle = StringValue.FromString("PivotStyleLight16"),
+                });
 
 
             // 行作成
@@ -169,22 +220,12 @@ namespace MCPArtNavi.Exporter.OpenXML
                         CellValue = new CellValue(""),
                         DataType = CellValues.String,
                         StyleIndex = (uint)(enabledItems.IndexOf(document.Pixels[p]) + 2),
-                        //StyleIndex = 2,
                     };
                     rows[i].InsertAt(cell, j);
                 }
 
                 sheetData.Append(rows[i]);
             }
-
-            //var p = 0;
-            //for (var i = 0; i < document.Size.GetWidth(); i++)
-            //{
-            //    for (var j = 0; j < document.Size.GetHeight(); j++)
-            //    {
-            //        var cell = 
-            //    }
-            //}
 
             workbookPart.Workbook.Save();
             spreadsheetDocument.Close();
