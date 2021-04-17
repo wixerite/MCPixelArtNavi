@@ -147,7 +147,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.ja-JP.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="LicenseDocs\Newtonsoft.Json\LICENSE.md" />
+    <None Include="LicenseDocs\README.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -179,9 +179,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </SplashScreen>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Resource Include="LicenseDocs\Prism\LICENSE.txt" />
+    <Resource Include="LicenseDocs\DocumentFormat.OpenXml\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LicenseDocs\Prism\LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
