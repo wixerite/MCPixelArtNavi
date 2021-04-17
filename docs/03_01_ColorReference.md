@@ -7,4 +7,4 @@
 
 | No  | Item Id           | JP Name                   | Color    | Sample                      |
 |-----|-------------------|---------------------------|----------|-----------------------------|
-|   1 | white_wool        |                           | #fafafa  <td bgcolor="#fafafa">&nbsp;  |
+|   1 | white_wool        |     d                     | #fafafa  <td bgcolor=red>s  |
