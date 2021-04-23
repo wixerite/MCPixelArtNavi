@@ -36,4 +36,4 @@
 > https://www.a32kita.net/software/mcpxartnavi/
 
 ### 5. How to use?
- こちらをご覧ください。
+ [ソフトウェアのご利用方法はこちらをご覧ください](docs/README.md)。
