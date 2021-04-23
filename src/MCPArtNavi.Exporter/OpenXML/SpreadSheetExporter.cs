@@ -131,7 +131,7 @@ namespace MCPArtNavi.Exporter.OpenXML
                     // 列の幅など
                     Min = 1u,
                     Max = (uint)document.Size.GetWidth(),
-                    Width = 3.2,
+                    Width = 3,
                     CustomWidth = true,
                 }),
                 new SheetData());

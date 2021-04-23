@@ -23,8 +23,19 @@
 
 ### 3. Lisence
  MC Pixel Art Navi は MIT Lisence でご利用いただけます。  
- ライセンス情報は、[こちらのファイル](LICENSE) をご覧ください。
+ 本ソフトウェアのライセンス情報は、[こちらのファイル](LICENSE) をご覧ください。
 
  ※ MIT License のため、商用利用 (収益化された YouTube 配信を含む等) でご利用いただけます。
 
  YouTube 等のライブ配信、動画配信の中で利用いただく際、差し支えなければご連絡いただければ幸いです。喜んで見に行きます。(ご連絡は任意です)
+
+ ** 追加のライセンス情報 :** [使用ライブラリに関するライセンス情報](src/MCPArtNavi.UserApp/LicenseDocs/README.md)
+
+### 4. Downloads
+ 本ソフトウェアの公式ビルドは、下記サイトにて頒布しております。  
+
+> MC Pixel Art Navi - ソフトウェア | ０と１の世界の見習い探検家  
+> https://www.a32kita.net/software/mcpxartnavi/
+
+### 5. How to use?
+ [ソフトウェアのご利用方法はこちらをご覧ください](docs/README.md)。

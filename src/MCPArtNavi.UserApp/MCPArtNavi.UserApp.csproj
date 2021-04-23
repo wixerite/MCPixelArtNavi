@@ -180,14 +180,14 @@
     </SplashScreen>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="LicenseDocs\DocumentFormat.OpenXml\LICENSE.txt">
+    <None Include="LicenseDocs\DocumentFormat.OpenXml\LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="LicenseDocs\Prism\LICENSE.txt">
+    <None Include="LicenseDocs\Prism\LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{802EB535-4C03-46EC-B4A7-7C15286A2CC9}</ProjectGuid>
+    <ProjectGuid>{7F0E23BE-B4F3-4F01-ACE8-22280925F387}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MCPArtNavi.Importer.Check</RootNamespace>
-    <AssemblyName>mcpan-impt-chk</AssemblyName>
+    <RootNamespace>MCPArtNavi.Tools.CRMaker</RootNamespace>
+    <AssemblyName>MCPArtNavi.Tools.CRMaker</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -49,12 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Assets\Tools\CRMaker\03_01_ColorReference.ja-JP.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MCPArtNavi.Importer\MCPArtNavi.Importer.csproj">
-      <Project>{46343ebe-e580-490d-8041-54574f45299d}</Project>
-      <Name>MCPArtNavi.Importer</Name>
+    <ProjectReference Include="..\..\MCPArtNavi.Common\MCPArtNavi.Common.csproj">
+      <Project>{164316cb-b20d-4ce0-94a7-fdb51df63d68}</Project>
+      <Name>MCPArtNavi.Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
