@@ -85,8 +85,8 @@ namespace MCPArtNavi.Tools.CRMaker
 
             string _mcItemToSampleImagePath(IMCItem item) => Path.Combine(colorsDir, $"{item.ItemId}.png");
 
-            var imageWidth = 5;
-            var imageHeight = imageWidth;
+            var imageWidth = 80;
+            var imageHeight = 20;
             foreach (var kvp in enabledItemSamples)
             {
                 var sampleImagePath = _mcItemToSampleImagePath(kvp.Key);
