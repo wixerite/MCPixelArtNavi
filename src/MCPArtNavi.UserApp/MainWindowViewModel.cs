@@ -18,6 +18,7 @@ using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
 using MCPArtNavi.Exporter;
+using MCPArtNavi.Exporter.CreativeCommand;
 using MCPArtNavi.Exporter.OpenXML;
 using MCPArtNavi.UserApp.MainWindowInternal;
 
@@ -397,7 +398,7 @@ namespace MCPArtNavi.UserApp
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 FileName = this.CurrentDocumentMetadata?.DocumentTitle,
-                Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|All Files (*.*)|*.*"
+                Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|Creative Command (*.txt)|*.txt|All Files (*.*)|*.*"
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -409,6 +410,10 @@ namespace MCPArtNavi.UserApp
                         case ".xlsx":
                             var ssExporter = new SpreadSheetExporter();
                             Task.Run(async () => await ssExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), fs)).Wait();
+                            break;
+                        case ".txt":
+                            var csExporter = new CreativeCommandExporter();
+                            Task.Run(async () => await csExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), fs)).Wait();
                             break;
                         default:
                             var encoder = new PngBitmapEncoder();
