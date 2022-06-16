@@ -19,6 +19,6 @@ namespace MCPArtNavi.Exporter
             set;
         }
 
-        public abstract Task<ExportResult> ExportAsync(PixelArtDocument document, Stream stream);
+        public abstract Task<ExportResult> ExportAsync(PixelArtDocument document, Stream stream, string baseDirectory);
     }
 }

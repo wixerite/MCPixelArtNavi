@@ -30,6 +30,7 @@
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Import}" Command="{Binding ImportCommand}"/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Export}" Command="{Binding ExportCommand}"/>
+                <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_MCFunctionExport}" Command="{Binding ExportCreativeFunctionCommand}"/>
                 <Separator/>
                 <MenuItem Header="{x:Static props:Resources.MainWindow_TopMenu_File_Exit}" Command="{Binding ExitApplicationCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
             </MenuItem>
