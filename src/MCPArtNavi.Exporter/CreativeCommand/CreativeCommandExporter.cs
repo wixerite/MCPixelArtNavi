@@ -10,11 +10,24 @@ namespace MCPArtNavi.Exporter.CreativeCommand
 {
     public class CreativeCommandExporter : ExporterBase
     {
+        // 公開プロパティ
+
         public override ExportOption Option
         {
             get;
             set;
         }
+
+
+        // 非公開メソッド
+
+        private async Task _writeFillCommand(StreamWriter sw, int startX, int startZ, int endX, int endZ, string itemId)
+        {
+            await sw.WriteLineAsync($"fill ~{startX} ~0 ~{startZ} ~{endX} ~0 ~{endZ} {itemId}");
+        }
+
+
+        // 公開メソッド
 
         /// <summary>
         /// 
@@ -72,8 +85,14 @@ namespace MCPArtNavi.Exporter.CreativeCommand
                     var nextItem = document.Pixels[nextItemNum];
                     if (currentItem != nextItem)
                     {
+                        if (col == 0)
+                        {
+                            // 左端の場合 → 先に変更
+                            currentItem = nextItem;
+                        }
+
                         // コマンドの出力
-                        await sw.WriteLineAsync($"fill ~{currentItemStartPositionX} ~0 ~{currentItemStartPositionZ} ~{col} ~0 ~{row} {currentItem.ItemId}");
+                        await this._writeFillCommand(sw, currentItemStartPositionX, currentItemStartPositionZ, col, row, currentItem.ItemId);
 
                         // currentItem の変更
                         currentItem = nextItem;
@@ -82,7 +101,7 @@ namespace MCPArtNavi.Exporter.CreativeCommand
                 }
 
                 // コマンドの出力
-                await sw.WriteLineAsync($"fill ~{currentItemStartPositionX} ~0 ~{currentItemStartPositionZ} ~{document.Size.GetWidth()} ~0 ~{row} {currentItem.ItemId}");
+                await this._writeFillCommand(sw, currentItemStartPositionX, currentItemStartPositionZ, document.Size.GetWidth(), row, currentItem.ItemId);
                 currentItemStartPositionX = 0;
                 currentItemStartPositionZ = row + 1;
             }
