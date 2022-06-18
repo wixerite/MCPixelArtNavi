@@ -116,8 +116,18 @@ namespace MCPArtNavi.Exporter.OpenXML
             };
         }
 
-        public override async Task<ExportResult> ExportAsync(PixelArtDocument document, Stream stream)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="document">マップアート データ</param>
+        /// <param name="stream">書き込み先ファイルのストリーム</param>
+        /// <param name="baseDirectory">このオプションは使用されません</param>
+        /// <returns></returns>
+        public override async Task<ExportResult> ExportAsync(PixelArtDocument document, Stream stream, string baseDirectory)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
             var spreadsheetDocument = SpreadsheetDocument.Create(stream, SpreadsheetDocumentType.Workbook);
             
             var workbookPart = spreadsheetDocument.AddWorkbookPart();

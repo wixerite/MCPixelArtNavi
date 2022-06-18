@@ -194,6 +194,9 @@ Are you sure you want to exit?</value>
   <data name="MainWindow_TopMenu_File_Import" xml:space="preserve">
     <value>Import(_I)...</value>
   </data>
+  <data name="MainWindow_TopMenu_File_MCFunctionExport" xml:space="preserve">
+    <value>Export Function(_M)...</value>
+  </data>
   <data name="MainWindow_TopMenu_File_NewFile" xml:space="preserve">
     <value>New File(_N)...</value>
   </data>

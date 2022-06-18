@@ -18,6 +18,7 @@ using MCPArtNavi.Common;
 using MCPArtNavi.Common.Items;
 using MCPArtNavi.Common.PxartFileUtils;
 using MCPArtNavi.Exporter;
+using MCPArtNavi.Exporter.CreativeCommand;
 using MCPArtNavi.Exporter.OpenXML;
 using MCPArtNavi.UserApp.MainWindowInternal;
 
@@ -174,6 +175,11 @@ namespace MCPArtNavi.UserApp
         public DelegateCommand ExportCommand
         {
             get => new DelegateCommand(this._export_command);
+        }
+
+        public DelegateCommand ExportCreativeFunctionCommand
+        {
+            get => new DelegateCommand(this._exportCreativeFunction_command);
         }
 
         public DelegateCommand EditDocumentPropertyCommand
@@ -397,7 +403,7 @@ namespace MCPArtNavi.UserApp
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 FileName = this.CurrentDocumentMetadata?.DocumentTitle,
-                Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|All Files (*.*)|*.*"
+                Filter = "PNG Image (*.png)|*.png|Microsoft Excel Book (*.xlsx)|*.xlsx|All Files (*.*)|*.*",
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -408,7 +414,7 @@ namespace MCPArtNavi.UserApp
                     {
                         case ".xlsx":
                             var ssExporter = new SpreadSheetExporter();
-                            Task.Run(async () => await ssExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), fs)).Wait();
+                            Task.Run(async () => await ssExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), fs, null)).Wait();
                             break;
                         default:
                             var encoder = new PngBitmapEncoder();
@@ -418,6 +424,33 @@ namespace MCPArtNavi.UserApp
                     }
 
                 }
+            }
+        }
+
+        private void _exportCreativeFunction_command()
+        {
+            var saveFileDialog = new SaveFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                FileName = this.CurrentDocumentMetadata?.DocumentTitle,
+                Filter = "Creative Command (Folder)|*",
+            };
+
+            saveFileDialog.FileOk += (sender, args) =>
+            {
+                var fpath = saveFileDialog.FileName;
+                if (Path.GetExtension(fpath) == "" &&
+                    (File.Exists(fpath) || Directory.Exists(fpath)))
+                {
+                    MessageBox.Show("File or Directory is already exists. Please rename or delete old files.");
+                    args.Cancel = true;
+                };
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var csExporter = new CreativeCommandExporter();
+                Task.Run(async () => await csExporter.ExportAsync(this.CanvasViewModel.GetPixelArt(), null, saveFileDialog.FileName)).Wait();
             }
         }
 
